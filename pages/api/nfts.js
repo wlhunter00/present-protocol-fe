@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // console.log(nfts);
+    console.log(nfts);
     res.status(200).json(nfts);
   } catch (error) {
     res.json(error);
