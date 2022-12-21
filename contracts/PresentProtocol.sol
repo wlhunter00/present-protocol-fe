@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
@@ -8,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract PresentProtocol is ERC721URIStorage, ERC721Holder, ERC1155Holder {
+contract PresentProtocol is ERC721URIStorage, ERC721Holder, ERC1155Holder, Ownable {
     using Strings for uint256;
     bytes4 constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
@@ -67,7 +68,7 @@ contract PresentProtocol is ERC721URIStorage, ERC721Holder, ERC1155Holder {
         emit Unwrapped(nftContract, present.tokenId, msg.sender, _presentId);
     }
 
-    function setBaseURI(string calldata _baseURI) external {
+    function setBaseURI(string calldata _baseURI) external onlyOwner {
         baseURI = _baseURI;
     }
 
