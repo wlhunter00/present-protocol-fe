@@ -21,8 +21,8 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
     error InvalidToken();
     error NotAuthorized();
 
-    event Unwrapped(address indexed _nftContract, uint96 indexed _tokenId, address indexed _receiver, uint256 _presentId);
     event Wrapped(address indexed _nftContract, uint96 indexed _tokenId, address indexed _gifter, address _receiver, uint256 _presentId);
+    event Unwrapped(address indexed _nftContract, uint96 indexed _tokenId, address indexed _receiver, uint256 _presentId);
 
     struct Present {
         address nftContract;
