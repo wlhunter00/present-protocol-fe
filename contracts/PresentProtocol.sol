@@ -42,15 +42,11 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
             revert InvalidContract();
         }
 
-        string memory tokenURI = string.concat(baseURI, _tokenId.toString());
+        presents[++currentId] = Present(_nftContract, _tokenId);
+        string memory tokenURI = string.concat(baseURI, currentId.toString());
 
-        _safeMint(_to, ++currentId);
+        _safeMint(_to, currentId);
         _setTokenURI(currentId, tokenURI);
-
-        presents[currentId] = Present(
-            _nftContract,
-            _tokenId
-        );
 
         emit Wrapped(_nftContract, _tokenId, msg.sender, _to, currentId);
     }
