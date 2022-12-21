@@ -17,17 +17,17 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
     uint256 public currentId;
     mapping(uint256 => Present) public presents;
 
+    struct Present {
+        address nftContract;
+        uint96 tokenId;
+    }
+
     error InvalidContract();
     error InvalidToken();
     error NotAuthorized();
 
     event Wrapped(address indexed _nftContract, uint96 indexed _tokenId, address indexed _gifter, address _receiver, uint256 _presentId);
     event Unwrapped(address indexed _nftContract, uint96 indexed _tokenId, address indexed _receiver, uint256 _presentId);
-
-    struct Present {
-        address nftContract;
-        uint96 tokenId;
-    }
 
     constructor(string memory _baseURI) ERC721("PresentProtocol", "PRESENT") {
         baseURI = _baseURI;
@@ -44,8 +44,8 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
 
         string memory tokenURI = string.concat(baseURI, _tokenId.toString());
 
+        _safeMint(_to, ++currentId);
         _setTokenURI(currentId, tokenURI);
-        _mint(_to, ++currentId);
 
         presents[currentId] = Present(
             _nftContract,
