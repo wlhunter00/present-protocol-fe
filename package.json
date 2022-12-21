@@ -22,6 +22,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-loading-icons": "^1.1.0",
-    "react-modal": "^3.16.1"
+    "react-modal": "^3.16.1",
+    "swr": "^2.0.0"
   }
 }

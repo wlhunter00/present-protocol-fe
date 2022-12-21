@@ -4,7 +4,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background: linear-gradient(90deg, #BD3F32 0%, #CB356B 100%);
+  background: linear-gradient(90deg, #bd3f32 0%, #cb356b 100%);
   color: white;
 }
 
@@ -13,7 +13,7 @@ h1.title {
   font-weight: 400;
   font-size: 68px;
   line-height: 80px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 p {
@@ -47,4 +47,13 @@ p {
 
 .custom-card:hover {
   background-color: rgb(235, 235, 235);
+}
+
+.modal {
+  margin: 20% 40% 20% 40%;
+  transform: 'translate(-50%, -50%)';
+  /* background-color: rgb(26, 25, 25); */
+  /* border: 1px solid #20c20e; */
+  /* border-radius: 4px; */
+  padding: 16px;
 }

@@ -1,5 +1,5 @@
-import Container from '@mui/material/Container'
-import { SelectNFT } from '../components/selectNFT'
+import Container from '@mui/material/Container';
+import { SelectNFT } from '../components/selectNFT';
 
 export default function Home() {
   return (
@@ -16,5 +16,5 @@ export default function Home() {
         </Container>
       </div>
     </>
-  )
+  );
 }
