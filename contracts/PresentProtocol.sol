@@ -28,9 +28,7 @@ contract PresentProtocol is ERC721URIStorage, ERC721Holder, ERC1155Holder {
     event Wrapped(address indexed _nftContract, uint256 indexed _tokenId, address indexed _gifter, address _receiver, uint256 _presentId);
     event Unwrapped(address indexed _nftContract, uint256 indexed _tokenId, address indexed _receiver, uint256 _presentId);
 
-    constructor(string memory _baseURI) ERC721("PresentProtocol", "PRESENT") {
-        baseURI = _baseURI;
-    }
+    constructor() ERC721("PresentProtocol", "PRESENT") {}
 
     function wrap(address _nftContract, uint256 _tokenId, address _to) external {
         if (ERC165Checker.supportsInterface(_nftContract, _INTERFACE_ID_ERC721)) {
