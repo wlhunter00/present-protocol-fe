@@ -2,13 +2,13 @@
 pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-import "./NFTReceiver.sol";
-
-contract PresentProtocol is ERC721URIStorage, NFTReceiver {
+contract PresentProtocol is ERC721URIStorage, ERC721Holder, ERC1155Holder {
     using Strings for uint256;
     bytes4 constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
@@ -23,7 +23,6 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
     }
 
     error InvalidContract();
-    error InvalidToken();
     error NotAuthorized();
 
     event Wrapped(address indexed _nftContract, uint256 indexed _tokenId, address indexed _gifter, address _receiver, uint256 _presentId);
@@ -52,7 +51,6 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
     }
 
     function unwrap(uint256 _presentId) external {
-        if (_presentId == 0 || _presentId > currentId) revert InvalidToken();
         if (ownerOf(_presentId) != msg.sender) revert NotAuthorized();
 
         Present memory present = presents[_presentId];
@@ -73,5 +71,9 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
 
     function setBaseURI(string calldata _baseURI) external {
         baseURI = _baseURI;
+    }
+
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC1155Receiver) returns (bool) {
+        return interfaceId == type(IERC1155Receiver).interfaceId || super.supportsInterface(interfaceId);
     }
 }
