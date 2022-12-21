@@ -1,5 +1,6 @@
 import Container from '@mui/material/Container';
-import { textAlign } from '@mui/system';
+import { SelectNFT } from '../components/selectNFT';
+
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
             Happy Holidays! Wrap your NFTs and send your wrapped present(s) to your friends and family.
             If you’ve received a present then simply unwrap them to receive your gift!
           </p>
+          <SelectNFT />
         </Container>
       </div>
     </>
