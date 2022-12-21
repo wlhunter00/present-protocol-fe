@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "./NFTReceiver.sol";
 
 contract PresentProtocol is ERC721URIStorage, NFTReceiver {
-    using Strings for uint96;
+    using Strings for uint256;
     bytes4 constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
 
@@ -19,21 +19,21 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
 
     struct Present {
         address nftContract;
-        uint96 tokenId;
+        uint256 tokenId;
     }
 
     error InvalidContract();
     error InvalidToken();
     error NotAuthorized();
 
-    event Wrapped(address indexed _nftContract, uint96 indexed _tokenId, address indexed _gifter, address _receiver, uint256 _presentId);
-    event Unwrapped(address indexed _nftContract, uint96 indexed _tokenId, address indexed _receiver, uint256 _presentId);
+    event Wrapped(address indexed _nftContract, uint256 indexed _tokenId, address indexed _gifter, address _receiver, uint256 _presentId);
+    event Unwrapped(address indexed _nftContract, uint256 indexed _tokenId, address indexed _receiver, uint256 _presentId);
 
     constructor(string memory _baseURI) ERC721("PresentProtocol", "PRESENT") {
         baseURI = _baseURI;
     }
 
-    function wrap(address _nftContract, uint96 _tokenId, address _to) external {
+    function wrap(address _nftContract, uint256 _tokenId, address _to) external {
         if (ERC165Checker.supportsInterface(_nftContract, _INTERFACE_ID_ERC721)) {
             IERC721(_nftContract).safeTransferFrom(msg.sender, address(this), _tokenId);
         } else if (ERC165Checker.supportsInterface(_nftContract, _INTERFACE_ID_ERC1155)) {
@@ -51,13 +51,13 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
         emit Wrapped(_nftContract, _tokenId, msg.sender, _to, currentId);
     }
 
-    function unwrap(uint96 _presentId) external {
+    function unwrap(uint256 _presentId) external {
         if (_presentId == 0 || _presentId > currentId) revert InvalidToken();
         if (ownerOf(_presentId) != msg.sender) revert NotAuthorized();
 
         Present memory present = presents[_presentId];
         address nftContract = present.nftContract;
-        uint96 tokenId = present.tokenId;
+        uint256 tokenId = present.tokenId;
 
         _burn(_presentId);
         delete presents[_presentId];
@@ -69,5 +69,9 @@ contract PresentProtocol is ERC721URIStorage, NFTReceiver {
         }
 
         emit Unwrapped(nftContract, present.tokenId, msg.sender, _presentId);
+    }
+
+    function setBaseURI(string calldata _baseURI) external {
+        baseURI = _baseURI;
     }
 }
