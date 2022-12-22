@@ -2,19 +2,16 @@
 pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract PresentProtocol is ERC721URIStorage, ERC721Holder, ERC1155Holder, Ownable {
-    using Strings for uint256;
+contract PresentProtocol is ERC721, ERC721Holder, ERC1155Holder, Ownable {
     bytes4 constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
-
-    string public baseURI;
+    string  public baseURI;
     uint256 public currentId;
     mapping(uint256 => Present) public presents;
 
@@ -41,10 +38,7 @@ contract PresentProtocol is ERC721URIStorage, ERC721Holder, ERC1155Holder, Ownab
         }
 
         presents[++currentId] = Present(_nftContract, _tokenId);
-        string memory tokenURI = string.concat(baseURI, currentId.toString());
-
         _safeMint(_to, currentId);
-        _setTokenURI(currentId, tokenURI);
 
         emit Wrapped(_nftContract, _tokenId, msg.sender, _to, currentId);
     }
