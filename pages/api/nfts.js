@@ -17,13 +17,16 @@ export default async function handler(req, res) {
     let nfts = [];
     for (let i = 0; i < apiResponse.data['assets'].length; i++) {
       const currNFT = apiResponse.data['assets'][i];
-      nfts.push({
-        token_id: Number(currNFT['token_id']),
-        collection_id: currNFT['asset_contract']['address'],
-        name: currNFT['name'],
-        description: currNFT['description'],
-        image: currNFT['image_url'],
-      });
+
+      if (currNFT['name'] && currNFT['description'] && currNFT['image_url']) {
+        nfts.push({
+          token_id: Number(currNFT['token_id']),
+          collection_addy: currNFT['asset_contract']['address'],
+          name: currNFT['name'],
+          description: currNFT['description'],
+          image: currNFT['image_url'],
+        });
+      }
     }
 
     console.log(nfts);
