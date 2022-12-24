@@ -34,6 +34,10 @@ p.body {
   z-index: 0;
 }
 
+#dynamic-widget {
+  z-index: 0 !important;
+}
+
 .custom-card {
   background-color: white;
   color: black;
