@@ -121,7 +121,7 @@ export function SelectNFT() {
           //   height={300}
           //   alt={selectedNFT.name}
           // />
-          <div style={{ width: "500px", margin: "auto" }}>
+          <div style={{ width: "fit-content", margin: "0 auto" }}>
             <NFTCard nft={selectedNFT} />
           </div>
           :

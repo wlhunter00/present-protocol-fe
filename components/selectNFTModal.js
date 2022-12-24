@@ -3,6 +3,8 @@ import { NFTCard } from "./NFTCard";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 // TODO: X close button
+// TODO: Fix the wallet connect thing
+// TODO: Add search
 
 export default function SelectNFTModal(props) {
     const isDesktop = useMediaQuery("(min-width:600px)");

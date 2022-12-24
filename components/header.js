@@ -2,6 +2,8 @@ import { DynamicWidget } from '@dynamic-labs/sdk-react';
 import Image from 'next/image';
 import GiftLogo from '../public/gift.svg';
 
+// TODO: mobile friendly header
+
 export function Header() {
     return (
         <header
