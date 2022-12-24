@@ -1,21 +1,18 @@
-import { Puff } from 'react-loading-icons';
-import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import { useDynamicContext, DynamicAuthFlow } from '@dynamic-labs/sdk-react';
-import useSWR from 'swr';
-import { Grid, Snackbar, Alert } from '@mui/material';
-import { Container } from '@mui/system';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useDynamicContext } from '@dynamic-labs/sdk-react';
+import useSWR from 'swr';
+
 // Contract info
 import { PRESENT_PROTOCOL_ADDY } from '../contractAddresses';
 import PresentProtocolABI from '../abis/PresentProtocolABI.json';
 import { ethers } from 'ethers';
 
+import SelectNFTModal from './selectNFTModal';
 import { NFTCard } from './NFTCard';
-import { WrapTextOutlined } from '@mui/icons-material';
 
 export function SelectNFT() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [selectModalOpen, setSelectModalOpen] = useState(false);
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [PresentProtocolContract, setPresentProtocolContract] = useState();
@@ -29,7 +26,6 @@ export function SelectNFT() {
     user ? `/api/nfts?userWallet=${user.walletPublicKey}` : null,
     fetcher
   );
-  const isDesktop = true; // @Will
 
   // Setting the contract
   useEffect(() => {
@@ -58,10 +54,10 @@ export function SelectNFT() {
         console.log('cant open modal, error retrieving nfts');
         console.log(nftsError);
       } else {
-        setModalOpen(true);
+        setSelectModalOpen(true);
       }
     } else {
-      setModalOpen(false);
+      setSelectModalOpen(false);
       setShowAuthFlow(true);
     }
   };
@@ -71,8 +67,8 @@ export function SelectNFT() {
     // subtitle.style.color = "#f00";
   }
 
-  function closeModal() {
-    setModalOpen(false);
+  function closeSelectModal() {
+    setSelectModalOpen(false);
   }
 
   async function selectNFT(nft) {
@@ -81,7 +77,7 @@ export function SelectNFT() {
 
     // Setting the selected NFT in state
     setSelectedNFT(nft);
-    closeModal();
+    closeSelectModal();
 
     // Now just do whatever you want with it
     setFormModalOpen(true);
@@ -113,43 +109,36 @@ export function SelectNFT() {
 
   return (
     <div>
-      <div className="custom-card" onClick={openSelectModal}>
-        <p>Click to Select NFT</p>
-      </div>
-      <Modal
-        isOpen={modalOpen}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={() => {
-          setModalOpen(false);
-        }}
-        contentLabel="NFT Selection"
-        className="modal"
-        ariaHideApp={false}
-      >
-        <Container className="body-container">
-          {nfts &&
-            nfts.map((nft, index) => (
-              <div
-                onClick={() => {
-                  selectNFT(nft);
-                }}
-              >
-                <Grid
-                  container
-                  spacing={2}
-                  direction={isDesktop ? 'row' : 'column'}
-                  style={{ alignContent: 'center' }}
-                >
-                  <Grid item xs={6} key={index}>
-                    <NFTCard nft={nft} />
-                  </Grid>
-                </Grid>
-              </div>
-            ))}
-        </Container>
-      </Modal>
+      <div className="image-select-card" onClick={openSelectModal}>
 
-      <Modal
+        {selectedNFT ?
+          // <Image
+          //   loader={() => {
+          //     return selectedNFT.image;
+          //   }}
+          //   src={selectedNFT.image}
+          //   width={300}
+          //   height={300}
+          //   alt={selectedNFT.name}
+          // />
+          <div style={{ width: "500px", margin: "auto" }}>
+            <NFTCard nft={selectedNFT} />
+          </div>
+          :
+          <div className="custom-card highlight-hover">
+            <p>Click to Select NFT</p>
+          </div>
+        }
+      </div>
+
+      <SelectNFTModal
+        open={selectModalOpen}
+        handleClose={closeSelectModal}
+        nfts={nfts}
+        selectNFT={selectNFT}
+      />
+
+      {/* <Modal
         isOpen={formModalOpen}
         // onAfterOpen={afterOpenModal}
         onRequestClose={() => {
@@ -183,7 +172,7 @@ export function SelectNFT() {
             <input type="submit" value="Submit" onClick={wrapNFT} />
           </form>
         </Grid>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

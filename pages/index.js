@@ -7,7 +7,7 @@ export default function Home() {
       <div>
         <Container style={{ textAlign: 'center' }}>
           <h1 className="title">The Present Protocol</h1>
-          <p>
+          <p className="body">
             Happy Holidays! Wrap your NFTs and send your wrapped present(s) to
             your friends and family. If you’ve received a present then simply
             unwrap them to receive your gift!

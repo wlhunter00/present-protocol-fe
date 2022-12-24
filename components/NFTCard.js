@@ -3,29 +3,22 @@ import Image from 'next/image';
 import GiftLogo from '../public/gift.svg';
 import { Grid, Snackbar, Alert } from '@mui/material';
 
-export function NFTCard({ nft }) {
-  const isDesktop = true; // @Will
-
+export function NFTCard(props) {
+  // console.log(nft)
   return (
-    <div className="custom-card">
-      <Grid container spacing={2} direction={isDesktop ? 'row' : 'column'}>
-        <Grid style={{ alignSelf: 'center' }} item xs={5}>
-          <Image
-            loader={() => {
-              return nft.image;
-            }}
-            src={nft.image}
-            width={300}
-            height={300}
-            alt={nft.name}
-          />
-        </Grid>
-        <Grid item xs={7}>
-          <h2 className="card-title">{nft.name}</h2>
+    <div className="image-card highlight-hover">
+      <Image
+        loader={() => {
+          return props.nft.image;
+        }}
+        src={props.nft.image}
+        width={300}
+        height={300}
+        alt={props.nft.name}
+      />
 
-          <p className="card-description">{nft.description}</p>
-        </Grid>
-      </Grid>
+      <h2 className="card-title">{props.nft.name}</h2>
+      <p className="card-description">{props.nft.collection_name} - {props.nft.token_id}</p>
     </div>
   );
 }

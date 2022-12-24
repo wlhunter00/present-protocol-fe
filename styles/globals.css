@@ -21,7 +21,7 @@ h1.title {
   color: #ffffff;
 }
 
-p {
+p.body {
   font-family: 'cursive';
   font-size: 30px;
   line-height: 50px;
@@ -48,17 +48,48 @@ p {
   margin: auto;
 
   cursor: pointer;
+  font-family: 'cursive';
+  font-size: larger;
 }
 
-.custom-card:hover {
-  background-color: rgb(235, 235, 235);
+.image-card {
+  background-color: white;
+  color: black;
+  border: 1px solid rgb(235, 235, 235);
+  border-radius: 4px;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%),
+    0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+  margin-bottom: 1rem;
+  padding: 16px;
+
+  width: 300px;
+
+  cursor: pointer;
+  font-family: 'cursive';
+  font-size: larger;
+
+  height: 450px;
 }
 
-.modal {
-  /* margin: 20% 40% 20% 40%; */
-  /* transform: 'translate(-50%, -50%)'; */
-  /* background-color: rgb(26, 25, 25); */
-  /* border: 1px solid #20c20e; */
-  /* border-radius: 4px; */
-  /* padding: 16px; */
+.highlight-hover:hover {
+  background-color: rgb(235, 235, 235) !important;
+}
+
+.image-select-card {
+  margin: auto;
+
+}
+
+.body-container, .modal-container {
+  min-height: 74vh;
+  text-align: center;
+}
+
+.modal-container {
+  margin-top: 10rem;
+}
+
+.card-description {
+  font-style: italic;
 }
