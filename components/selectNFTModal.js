@@ -1,13 +1,26 @@
-import { Dialog, Grid, DialogTitle, DialogContent } from "@mui/material";
+import { Dialog, Grid, DialogTitle, DialogContent, TextField, InputAdornment } from "@mui/material";
+import { Search } from "@mui/icons-material";
 import { NFTCard } from "./NFTCard";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useState, useEffect } from "react";
 
 // TODO: X close button
-// TODO: Fix the wallet connect thing
-// TODO: Add search
 
 export default function SelectNFTModal(props) {
     const isDesktop = useMediaQuery("(min-width:600px)");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchNFTs, setSearchNFTs] = useState(props.nfts);
+
+    useEffect(() => {
+        setSearchNFTs(props.nfts);
+    }, [props.nfts]);
+
+    useEffect(() => {
+        if (props.nfts) {
+            setSearchNFTs(props.nfts.filter((nft) => (nft.name.toLowerCase().includes(searchQuery) || nft.collection_name.toLowerCase().includes(searchQuery))));
+        }
+    }, [searchQuery]);
+
 
     return (
         <Dialog
@@ -19,6 +32,20 @@ export default function SelectNFTModal(props) {
             maxWidth={"lg"}
         >
             <DialogTitle>Select an NFT to Gift</DialogTitle>
+            <TextField
+                id="outlined-basic"
+                label="Search"
+                variant="outlined"
+                style={{ width: isDesktop ? "50%" : "80%", margin: "0 auto", marginBottom: "1rem" }}
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <Search />
+                        </InputAdornment>
+                    ),
+                }}
+                onChange={(e) => setSearchQuery(e.target.value)}
+            />
 
             <DialogContent dividers>
                 <div className="modal-content">
@@ -28,8 +55,8 @@ export default function SelectNFTModal(props) {
                         style={{ alignContent: 'center' }}
                         gap={4}
                     >
-                        {props.nfts &&
-                            props.nfts.map((nft, index) => (
+                        {searchNFTs &&
+                            searchNFTs.map((nft, index) => (
                                 <div
                                     onClick={() => props.selectNFT(nft)}
                                     key={index}

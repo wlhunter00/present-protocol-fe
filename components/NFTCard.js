@@ -4,7 +4,6 @@ import GiftLogo from '../public/gift.svg';
 import { Grid, Snackbar, Alert } from '@mui/material';
 
 export function NFTCard(props) {
-  // console.log(nft)
   return (
     <div className="image-card highlight-hover">
       <Image

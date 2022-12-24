@@ -23,7 +23,7 @@ h1.title {
 
 p.body {
   font-family: 'cursive';
-  font-size: 30px;
+  font-size: 24px;
   line-height: 50px;
 }
 
@@ -31,6 +31,7 @@ p.body {
   background-color: green !important;
   padding: 1rem !important;
   font-size: large !important;
+  z-index: 0;
 }
 
 .custom-card {
