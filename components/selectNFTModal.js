@@ -1,5 +1,5 @@
 import { Dialog, Grid, DialogTitle, DialogContent, TextField, InputAdornment } from "@mui/material";
-import { Search } from "@mui/icons-material";
+import { Search, Close } from "@mui/icons-material";
 import { NFTCard } from "./NFTCard";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useState, useEffect } from "react";
@@ -32,6 +32,9 @@ export default function SelectNFTModal(props) {
             maxWidth={"lg"}
         >
             <DialogTitle>Select an NFT to Gift</DialogTitle>
+            <div className="close-button" onClick={props.handleClose}>
+                <Close />
+            </div>
             <TextField
                 id="outlined-basic"
                 label="Search"

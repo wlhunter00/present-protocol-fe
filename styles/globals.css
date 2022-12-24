@@ -98,3 +98,10 @@ p.body {
 .card-description {
   font-style: italic;
 }
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  cursor: pointer;
+}
