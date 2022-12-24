@@ -19,12 +19,13 @@ h1.title {
   font-size: 68px;
   line-height: 80px;
   color: #ffffff;
+  margin-top: 0;
 }
 
 p.body {
   font-family: 'cursive';
   font-size: 24px;
-  line-height: 50px;
+  line-height: 35px;
 }
 
 .custom-connect-button {
@@ -49,7 +50,7 @@ p.body {
   margin-bottom: 1rem;
   padding: 16px;
 
-  width: 500px;
+  width: 50%;
   margin: auto;
 
   cursor: pointer;

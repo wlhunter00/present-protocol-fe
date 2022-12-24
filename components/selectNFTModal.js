@@ -4,8 +4,6 @@ import { NFTCard } from "./NFTCard";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useState, useEffect } from "react";
 
-// TODO: X close button
-
 export default function SelectNFTModal(props) {
     const isDesktop = useMediaQuery("(min-width:600px)");
     const [searchQuery, setSearchQuery] = useState("");

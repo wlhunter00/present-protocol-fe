@@ -1,18 +1,22 @@
 import { DynamicWidget } from '@dynamic-labs/sdk-react';
-import Image from 'next/image';
 import GiftLogo from '../public/gift.svg';
-
-// TODO: mobile friendly header
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export function Header() {
+    const isDesktop = useMediaQuery("(min-width:600px)");
+
+    console.log("d", isDesktop)
+
+    const styles = {
+        marginTop: '1rem',
+        paddingLeft: isDesktop ? "10rem" : "1.5rem",
+        paddingRight: isDesktop ? "10rem" : "1.5rem",
+        marginBottom: ".5rem"
+    }
+
     return (
         <header
-            style={{
-                marginTop: '1rem',
-                paddingLeft: "10rem",
-                paddingRight: "10rem",
-                paddingBottom: '.5rem',
-            }}
+            style={styles}
         >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <GiftLogo />

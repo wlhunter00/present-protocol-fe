@@ -1,7 +1,4 @@
-import { DynamicWidget } from '@dynamic-labs/sdk-react';
 import Image from 'next/image';
-import GiftLogo from '../public/gift.svg';
-import { Grid, Snackbar, Alert } from '@mui/material';
 
 export function NFTCard(props) {
   return (
