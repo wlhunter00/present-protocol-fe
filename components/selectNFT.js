@@ -13,6 +13,7 @@ import { NFTCard } from './NFTCard';
 import WalletInput from './walletInput';
 import { Container } from '@mui/system'
 import GiftLogo from '../public/gift.svg';
+import { Button } from '@mui/material';
 
 // todo fix the mobile
 
@@ -177,6 +178,7 @@ export function SelectNFT() {
               resolvedAddress={resolvedAddress}
               selectedNFT={selectedNFT}
             />
+            <Button variant="contained" color="success" size="large" disabled={!resolvedAddress}>Gift</Button>
           </div>
         }
 
