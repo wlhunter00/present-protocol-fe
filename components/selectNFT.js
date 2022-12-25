@@ -13,11 +13,10 @@ import { NFTCard } from './NFTCard';
 import WalletInput from './walletInput';
 import { Container } from '@mui/system'
 import GiftLogo from '../public/gift.svg';
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import dayjs from 'dayjs';
 
 // todo handle errors
 
@@ -31,7 +30,7 @@ export function SelectNFT() {
   const { user, walletConnector, setShowAuthFlow, showAuthFlow } =
     useDynamicContext();
   const [resolvedAddress, setResolvedAddress] = useState("");
-  const [unwrapDate, setUnwrapDate] = useState("");
+  const [unwrapDate, setUnwrapDate] = useState();
 
   // Getting all the user's NFTs
   const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -39,6 +38,10 @@ export function SelectNFT() {
     user ? `/api/nfts?userWallet=${user.walletPublicKey}` : null,
     fetcher
   );
+
+  useEffect(() => {
+    setUnwrapDate(dayjs());
+  }, [])
 
   useEffect(() => {
     checkAddressInput();
@@ -131,7 +134,10 @@ export function SelectNFT() {
   }
 
   async function wrapNFT() {
-    console.log('Wrapping nft!', resolvedAddress, selectedNFT.collection_address);
+    console.log('Wrapping nft!', resolvedAddress, selectedNFT.collection_address, unwrapDate);
+
+    // todo - fix wrapping approval
+    // todo - confirm user logged in
 
     try {
       // Approve txn - need to also add for 1155 (check if it's an 1155 or 721 and then use the proper approve func)
@@ -153,6 +159,8 @@ export function SelectNFT() {
       console.log(error);
     }
   }
+
+  const color = "white";
 
   return (
     <Container>
@@ -178,22 +186,35 @@ export function SelectNFT() {
         />
         {selectedNFT &&
           <div className='form-inputs'>
+            <div style={{ margin: "1.5rem" }}>
+              <DesktopDatePicker
+                label="Unwrap Date"
+                inputFormat="MM/DD/YYYY"
+                value={unwrapDate}
+                onChange={setUnwrapDate}
+                renderInput={
+                  (params) =>
+                    <TextField
+                      required
+                      sx={{
+                        borderColor: { color },
+                        svg: { color },
+                        input: { color },
+                        label: { color }
+                      }}
+
+                      {...params}
+                    />
+                }
+                disablePast
+              />
+            </div>
             <WalletInput
               walletSetter={setWalletAddressToSendTo}
               resolvedAddress={resolvedAddress}
               selectedNFT={selectedNFT}
             />
-
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DesktopDatePicker
-                label="Date desktop"
-                inputFormat="MM/DD/YYYY"
-                value={unwrapDate}
-                onChange={setUnwrapDate}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-
+            <p className="confirmation" style={{ marginBottom: "1rem" }}>They will be able to open it on: <i>{unwrapDate.format('MM/DD/YYYY')}</i></p>
             <Button
               variant="contained"
               color="success"
@@ -201,7 +222,7 @@ export function SelectNFT() {
               disabled={!resolvedAddress}
               onClick={wrapNFT}
             >
-              Gift
+              Send Gift
             </Button>
           </div>
         }

@@ -5,8 +5,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 export function Header() {
     const isDesktop = useMediaQuery("(min-width:600px)");
 
-    console.log("d", isDesktop)
-
     const styles = {
         marginTop: '1rem',
         paddingLeft: isDesktop ? "10rem" : "1.5rem",
