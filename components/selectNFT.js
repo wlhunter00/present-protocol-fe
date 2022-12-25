@@ -15,6 +15,10 @@ import { Container } from '@mui/system'
 import GiftLogo from '../public/gift.svg';
 import { Button } from '@mui/material';
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
+
 // todo handle errors
 
 export function SelectNFT() {
@@ -27,6 +31,7 @@ export function SelectNFT() {
   const { user, walletConnector, setShowAuthFlow, showAuthFlow } =
     useDynamicContext();
   const [resolvedAddress, setResolvedAddress] = useState("");
+  const [unwrapDate, setUnwrapDate] = useState("");
 
   // Getting all the user's NFTs
   const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -178,6 +183,17 @@ export function SelectNFT() {
               resolvedAddress={resolvedAddress}
               selectedNFT={selectedNFT}
             />
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
+                label="Date desktop"
+                inputFormat="MM/DD/YYYY"
+                value={unwrapDate}
+                onChange={setUnwrapDate}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
+
             <Button
               variant="contained"
               color="success"
