@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useDynamicContext } from '@dynamic-labs/sdk-react';
 import useSWR from 'swr';
+const { toChecksumAddress } = require('ethereum-checksum-address');
 
 // Contract info
 import { PRESENT_PROTOCOL_ADDY } from '../contractAddresses';
@@ -10,15 +10,22 @@ import { ethers } from 'ethers';
 
 import SelectNFTModal from './selectNFTModal';
 import { NFTCard } from './NFTCard';
+import WalletInput from './walletInput';
+import { Container } from '@mui/system'
+import GiftLogo from '../public/gift.svg';
+
+// todo fix the mobile
 
 export function SelectNFT() {
   const [selectModalOpen, setSelectModalOpen] = useState(false);
+  const [walletInputError, setWalletInputError] = useState(false);
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [PresentProtocolContract, setPresentProtocolContract] = useState();
   const [walletAddressToSendTo, setWalletAddressToSendTo] = useState(null);
   const { user, walletConnector, setShowAuthFlow, showAuthFlow } =
     useDynamicContext();
+  const [resolvedAddress, setResolvedAddress] = useState("");
 
   // Getting all the user's NFTs
   const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -26,6 +33,10 @@ export function SelectNFT() {
     user ? `/api/nfts?userWallet=${user.walletPublicKey}` : null,
     fetcher
   );
+
+  useEffect(() => {
+    checkAddressInput();
+  }, [walletAddressToSendTo]);
 
   // Setting the contract
   useEffect(() => {
@@ -83,6 +94,36 @@ export function SelectNFT() {
     setFormModalOpen(true);
   }
 
+  async function checkAddressInput() {
+    if (user && walletConnector) {
+      const checkProvider = walletConnector.getWeb3Provider();
+
+      try {
+        const ensCheck = await checkProvider.resolveName(walletAddressToSendTo);
+
+        if (!ensCheck) {
+          throw 'ENS Resolve Failed';
+        }
+        else {
+          setResolvedAddress(ensCheck);
+        }
+        console.log("ens output", ensCheck);
+      }
+      catch (err) {
+        try {
+          const checkSumCheck = toChecksumAddress(walletAddressToSendTo);
+          if (checkSumCheck) {
+            console.log("checksum output", checkSumCheck);
+            setResolvedAddress(checkSumCheck);
+          }
+        }
+        catch (err) {
+          setResolvedAddress("");
+        }
+      }
+    }
+  }
+
   async function wrapNFT() {
     console.log('Wrapping nft!');
 
@@ -108,37 +149,36 @@ export function SelectNFT() {
   }
 
   return (
-    <div>
-      <div className="image-select-card" onClick={openSelectModal}>
+    <Container>
+      <div className='gifting-form'>
+        <h2 className="subtitle">Gift an NFT</h2>
+        <div className="image-select-card" >
+          {selectedNFT ?
+            <div style={{ width: "fit-content", margin: "0 auto" }} onClick={openSelectModal}>
+              <NFTCard nft={selectedNFT} />
+            </div>
+            :
+            <div className="custom-card highlight-hover" onClick={openSelectModal}>
+              <GiftLogo />
+              <h4>Select Which NFT</h4>
+            </div>
+          }
+        </div>
+        <SelectNFTModal
+          open={selectModalOpen}
+          handleClose={closeSelectModal}
+          nfts={nfts}
+          selectNFT={selectNFT}
+        />
+        <div className='form-inputs'>
+          <WalletInput
+            walletSetter={setWalletAddressToSendTo}
+            resolvedAddress={resolvedAddress}
+            selectedNFT={selectedNFT}
+          />
+        </div>
 
-        {selectedNFT ?
-          // <Image
-          //   loader={() => {
-          //     return selectedNFT.image;
-          //   }}
-          //   src={selectedNFT.image}
-          //   width={300}
-          //   height={300}
-          //   alt={selectedNFT.name}
-          // />
-          <div style={{ width: "fit-content", margin: "0 auto" }}>
-            <NFTCard nft={selectedNFT} />
-          </div>
-          :
-          <div className="custom-card highlight-hover">
-            <p>Click to Select NFT</p>
-          </div>
-        }
-      </div>
-
-      <SelectNFTModal
-        open={selectModalOpen}
-        handleClose={closeSelectModal}
-        nfts={nfts}
-        selectNFT={selectNFT}
-      />
-
-      {/* <Modal
+        {/* <Modal
         isOpen={formModalOpen}
         // onAfterOpen={afterOpenModal}
         onRequestClose={() => {
@@ -173,6 +213,7 @@ export function SelectNFT() {
           </form>
         </Grid>
       </Modal> */}
-    </div>
+      </div>
+    </Container>
   );
 }
