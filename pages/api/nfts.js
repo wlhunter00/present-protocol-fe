@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       if (currNFT['name'] && currNFT['description'] && currNFT['image_url']) {
         nfts.push({
           token_id: Number(currNFT['token_id']),
-          collection_adddress: currNFT['asset_contract']['address'],
+          collection_address: currNFT['asset_contract']['address'],
           collection_name: currNFT['asset_contract']['name'],
           name: currNFT['name'],
           description: currNFT['description'],

@@ -15,7 +15,7 @@ import { Container } from '@mui/system'
 import GiftLogo from '../public/gift.svg';
 import { Button } from '@mui/material';
 
-// todo fix the mobile
+// todo handle errors
 
 export function SelectNFT() {
   const [selectModalOpen, setSelectModalOpen] = useState(false);
@@ -126,7 +126,7 @@ export function SelectNFT() {
   }
 
   async function wrapNFT() {
-    console.log('Wrapping nft!');
+    console.log('Wrapping nft!', resolvedAddress, selectedNFT.collection_address);
 
     try {
       // Approve txn - need to also add for 1155 (check if it's an 1155 or 721 and then use the proper approve func)
@@ -138,9 +138,9 @@ export function SelectNFT() {
 
       // Wrap NFT (and send)
       const wrap = await PresentProtocolContract.wrap(
-        selectedNFT.collection_addy,
+        selectedNFT.collection_address,
         selectedNFT.token_id,
-        walletAddressToSendTo
+        resolvedAddress
       );
       await wrap.wait();
     } catch (error) {
@@ -161,7 +161,7 @@ export function SelectNFT() {
             :
             <div className="custom-card highlight-hover" onClick={openSelectModal}>
               <GiftLogo />
-              <h4>Select Which NFT</h4>
+              <h4>Select an NFT</h4>
             </div>
           }
         </div>
@@ -178,45 +178,17 @@ export function SelectNFT() {
               resolvedAddress={resolvedAddress}
               selectedNFT={selectedNFT}
             />
-            <Button variant="contained" color="success" size="large" disabled={!resolvedAddress}>Gift</Button>
+            <Button
+              variant="contained"
+              color="success"
+              size="large"
+              disabled={!resolvedAddress}
+              onClick={wrapNFT}
+            >
+              Gift
+            </Button>
           </div>
         }
-
-        {/* <Modal
-        isOpen={formModalOpen}
-        // onAfterOpen={afterOpenModal}
-        onRequestClose={() => {
-          setFormModalOpen(false);
-        }}
-        contentLabel="Wrap your NFT"
-        className="modal"
-        ariaHideApp={false}
-      >
-        <Grid
-          container
-          spacing={2}
-          direction={isDesktop ? 'row' : 'column'}
-          style={{ alignContent: 'center' }}
-        >
-          <h2>Send this NFT as a gift to someone!</h2>
-          <br />
-          <form>
-            <label for="walletaddy">Wallet address:</label>
-            <br />
-            <input
-              type="text"
-              id="walletaddy"
-              name="walletaddy"
-              placeholder="wallet addy"
-              onChange={(e) => {
-                setWalletAddressToSendTo(e.target.value);
-                console.log(e.target.value);
-              }}
-            />
-            <input type="submit" value="Submit" onClick={wrapNFT} />
-          </form>
-        </Grid>
-      </Modal> */}
       </div>
     </Container>
   );
