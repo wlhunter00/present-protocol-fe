@@ -26,7 +26,7 @@ export default function WalletInput(props) {
                 disabled={!props.selectedNFT}
             />
             {props.selectedNFT &&
-                <div>
+                <div style={{ padding: ".5rem" }}>
                     <p className="confirmation">"{props.selectedNFT.name}" will be gifted to:</p>
                     {props.resolvedAddress ?
                         <p className="confirmation"><i>{props.resolvedAddress}</i></p>

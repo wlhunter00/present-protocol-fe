@@ -170,13 +170,15 @@ export function SelectNFT() {
           nfts={nfts}
           selectNFT={selectNFT}
         />
-        <div className='form-inputs'>
-          <WalletInput
-            walletSetter={setWalletAddressToSendTo}
-            resolvedAddress={resolvedAddress}
-            selectedNFT={selectedNFT}
-          />
-        </div>
+        {selectedNFT &&
+          <div className='form-inputs'>
+            <WalletInput
+              walletSetter={setWalletAddressToSendTo}
+              resolvedAddress={resolvedAddress}
+              selectedNFT={selectedNFT}
+            />
+          </div>
+        }
 
         {/* <Modal
         isOpen={formModalOpen}

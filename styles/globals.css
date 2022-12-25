@@ -68,7 +68,6 @@ p.body {
     0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
   margin-bottom: 1rem;
   padding: 16px;
-
   width: 300px;
 
   cursor: pointer;
@@ -76,6 +75,10 @@ p.body {
   font-size: larger;
 
   height: 450px;
+}
+
+.mobile-image {
+  width: 250px !important;
 }
 
 .highlight-hover:hover {
@@ -132,4 +135,5 @@ p.confirmation {
   font-size: 24px;
   margin-bottom: .5rem;
   margin-top: 0;
+  overflow-wrap: break-word;
 }
