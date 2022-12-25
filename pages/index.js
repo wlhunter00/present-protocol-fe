@@ -12,8 +12,8 @@ export default function Home() {
             your friends and family. If you’ve received a present then simply
             unwrap them to receive your gift!
           </p>
-          <SelectNFT />
         </Container>
+        <SelectNFT />
       </div>
     </>
   );

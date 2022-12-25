@@ -22,8 +22,6 @@ import dayjs from 'dayjs';
 
 export function SelectNFT() {
   const [selectModalOpen, setSelectModalOpen] = useState(false);
-  const [walletInputError, setWalletInputError] = useState(false);
-  const [formModalOpen, setFormModalOpen] = useState(false);
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [PresentProtocolContract, setPresentProtocolContract] = useState();
   const [walletAddressToSendTo, setWalletAddressToSendTo] = useState(null);
@@ -82,11 +80,6 @@ export function SelectNFT() {
     }
   };
 
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    // subtitle.style.color = "#f00";
-  }
-
   function closeSelectModal() {
     setSelectModalOpen(false);
   }
@@ -98,9 +91,6 @@ export function SelectNFT() {
     // Setting the selected NFT in state
     setSelectedNFT(nft);
     closeSelectModal();
-
-    // Now just do whatever you want with it
-    setFormModalOpen(true);
   }
 
   async function checkAddressInput() {
@@ -163,70 +153,72 @@ export function SelectNFT() {
   const color = "white";
 
   return (
-    <Container>
-      <div className='gifting-form'>
-        <h2 className="subtitle">Gift an NFT</h2>
-        <div className="image-select-card" >
-          {selectedNFT ?
-            <div style={{ width: "fit-content", margin: "0 auto" }} onClick={openSelectModal}>
-              <NFTCard nft={selectedNFT} />
-            </div>
-            :
-            <div className="custom-card highlight-hover" onClick={openSelectModal}>
-              <GiftLogo />
-              <h4>Select an NFT</h4>
+    <div className='gifting-bg'>
+      <Container>
+        <div className='gifting-form'>
+          <h2 className="subtitle">Gift an NFT</h2>
+          <div className="image-select-card" >
+            {selectedNFT ?
+              <div style={{ width: "fit-content", margin: "0 auto" }} onClick={openSelectModal}>
+                <NFTCard nft={selectedNFT} />
+              </div>
+              :
+              <div className="custom-card highlight-hover" onClick={openSelectModal}>
+                <GiftLogo />
+                <h4>Select an NFT</h4>
+              </div>
+            }
+          </div>
+          <SelectNFTModal
+            open={selectModalOpen}
+            handleClose={closeSelectModal}
+            nfts={nfts}
+            selectNFT={selectNFT}
+          />
+          {selectedNFT &&
+            <div className='form-inputs'>
+              <div style={{ margin: "1.5rem" }}>
+                <DesktopDatePicker
+                  label="Unwrap Date"
+                  inputFormat="MM/DD/YYYY"
+                  value={unwrapDate}
+                  onChange={setUnwrapDate}
+                  renderInput={
+                    (params) =>
+                      <TextField
+                        required
+                        sx={{
+                          borderColor: { color },
+                          svg: { color },
+                          input: { color },
+                          label: { color }
+                        }}
+
+                        {...params}
+                      />
+                  }
+                  disablePast
+                />
+              </div>
+              <WalletInput
+                walletSetter={setWalletAddressToSendTo}
+                resolvedAddress={resolvedAddress}
+                selectedNFT={selectedNFT}
+              />
+              <p className="confirmation" style={{ marginBottom: "1rem" }}>They will be able to open it on: <i>{unwrapDate.format('MM/DD/YYYY')}</i></p>
+              <Button
+                variant="contained"
+                color="success"
+                size="large"
+                disabled={!resolvedAddress}
+                onClick={wrapNFT}
+              >
+                Send Gift
+              </Button>
             </div>
           }
         </div>
-        <SelectNFTModal
-          open={selectModalOpen}
-          handleClose={closeSelectModal}
-          nfts={nfts}
-          selectNFT={selectNFT}
-        />
-        {selectedNFT &&
-          <div className='form-inputs'>
-            <div style={{ margin: "1.5rem" }}>
-              <DesktopDatePicker
-                label="Unwrap Date"
-                inputFormat="MM/DD/YYYY"
-                value={unwrapDate}
-                onChange={setUnwrapDate}
-                renderInput={
-                  (params) =>
-                    <TextField
-                      required
-                      sx={{
-                        borderColor: { color },
-                        svg: { color },
-                        input: { color },
-                        label: { color }
-                      }}
-
-                      {...params}
-                    />
-                }
-                disablePast
-              />
-            </div>
-            <WalletInput
-              walletSetter={setWalletAddressToSendTo}
-              resolvedAddress={resolvedAddress}
-              selectedNFT={selectedNFT}
-            />
-            <p className="confirmation" style={{ marginBottom: "1rem" }}>They will be able to open it on: <i>{unwrapDate.format('MM/DD/YYYY')}</i></p>
-            <Button
-              variant="contained"
-              color="success"
-              size="large"
-              disabled={!resolvedAddress}
-              onClick={wrapNFT}
-            >
-              Send Gift
-            </Button>
-          </div>
-        }
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 }
