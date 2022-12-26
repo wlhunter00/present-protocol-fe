@@ -183,6 +183,10 @@ export function SelectNFT() {
           console.log("wrap done");
           setSuccessData(wraptxt.events[3]);
           setWrapStatus("success");
+
+          setResolvedAddress("");
+          setUnwrapDate();
+          setSelectedNFT(null);
         }
         catch (error) {
           setWrapStatus("error");
