@@ -1,9 +1,20 @@
 import { Dialog, DialogTitle, DialogContent, CircularProgress, Chip, Alert, AlertTitle } from "@mui/material";
 import { Check, Error, Pause, Close } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import ConfettiAnimation from "./confetti";
+import { useState, useEffect } from "react";
 
 export default function WrapNFTModal(props) {
     const isDesktop = useMediaQuery("(min-width:600px)");
+    const [triggerConfetti, setTriggerConfetti] = useState(false);
+
+    useEffect(() => {
+        if (props.wrapStatus === "success") {
+            console.log("here");
+            setTriggerConfetti(true);
+            setTimeout(() => setTriggerConfetti(false), 3000);
+        }
+    }, [props.wrapStatus])
 
     return (
         <Dialog
@@ -87,6 +98,7 @@ export default function WrapNFTModal(props) {
                         />
                     </div>
                 </div>
+                {triggerConfetti && <ConfettiAnimation />}
             </DialogContent>
         </ Dialog>
     )
