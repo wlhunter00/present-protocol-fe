@@ -32,9 +32,10 @@ export function SelectNFT() {
   const [unwrapDate, setUnwrapDate] = useState();
   const [wrapModal, setWrapModal] = useState(false);
   // Status goes default, info (pending), success, error
-  const [approvalStatus, setApprovalStatus] = useState("default")
-  const [wrapStatus, setWrapStatus] = useState("default")
-  const [errorMessage, setErrorMessage] = useState("")
+  const [approvalStatus, setApprovalStatus] = useState("default");
+  const [wrapStatus, setWrapStatus] = useState("default");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successData, setSuccessData] = useState();
   const color = "white";
 
   // todo - on success render the x to close
@@ -99,6 +100,7 @@ export function SelectNFT() {
       setApprovalStatus("default");
       setWrapStatus("default");
       setErrorMessage("");
+      setSuccessData();
     }
   }
 
@@ -176,8 +178,10 @@ export function SelectNFT() {
 
           setWrapStatus("info");
           console.log("wrapping request sent")
-          await wrap.wait();
+          const wraptxt = await wrap.wait();
+          console.log(wraptxt.events[3]);
           console.log("wrap done");
+          setSuccessData(wraptxt.events[3]);
           setWrapStatus("success");
         }
         catch (error) {
@@ -272,6 +276,7 @@ export function SelectNFT() {
             handleClose={closeWrapNFTModal}
             nft={selectedNFT}
             errorMessage={errorMessage}
+            successData={successData}
           />
         </div>
       </Container>

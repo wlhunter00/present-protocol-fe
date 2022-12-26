@@ -151,3 +151,8 @@ p.confirmation {
 .w-15 {
   width: 15rem;
 }
+
+.success-link {
+  color: green;
+  text-decoration: auto;
+}
