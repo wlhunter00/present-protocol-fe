@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle, DialogContent, CircularProgress, Chip } from "@mui/material";
-import { Check, Pause } from "@mui/icons-material";
+import { Check, Error, Pause } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function WrapNFTModal(props) {
@@ -35,6 +35,9 @@ export default function WrapNFTModal(props) {
                                     {props.approvalStatus === "default" &&
                                         <Pause />
                                     }
+                                    {props.approvalStatus === "error" &&
+                                        <Error />
+                                    }
                                 </>
 
                             }
@@ -61,11 +64,14 @@ export default function WrapNFTModal(props) {
                                     {props.wrapStatus === "default" &&
                                         <Pause />
                                     }
+                                    {props.wrapStatus === "error" &&
+                                        <Error />
+                                    }
                                 </>
 
                             }
                             color={props.wrapStatus}
-                            label="Wraping the NFT"
+                            label="Wrapping the NFT"
                             sx={{ fontSize: "x-large", padding: "1.5rem" }}
                         />
                     </div>

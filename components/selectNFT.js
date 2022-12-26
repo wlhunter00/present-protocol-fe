@@ -30,7 +30,7 @@ export function SelectNFT() {
     useDynamicContext();
   const [resolvedAddress, setResolvedAddress] = useState("");
   const [unwrapDate, setUnwrapDate] = useState();
-  const [wrapModal, setWrapModal] = useState(true);
+  const [wrapModal, setWrapModal] = useState(false);
   // Status goes default, info (pending), success, error
   const [approvalStatus, setApprovalStatus] = useState("default")
   const [wrapStatus, setWrapStatus] = useState("default")
@@ -145,14 +145,14 @@ export function SelectNFT() {
     // todo - fix wrapping approval
     // todo - confirm user logged in
 
-    try {
-      if (selectedNFT.schema === "ERC721") {
-        const abi = ["function approve(address _spender, uint256 _value) public returns (bool success)"];
-        const provider = walletConnector.getWeb3Provider();
-        const signer = provider.getSigner();
+    if (selectedNFT.schema === "ERC721") {
+      const abi = ["function approve(address _spender, uint256 _value) public returns (bool success)"];
+      const provider = walletConnector.getWeb3Provider();
+      const signer = provider.getSigner();
 
-        const specificNFTContract = new ethers.Contract(selectedNFT.collection_address, abi, provider);
+      const specificNFTContract = new ethers.Contract(selectedNFT.collection_address, abi, provider);
 
+      try {
         console.log("requesting approval for", selectedNFT.collection_address);
         const approval = await specificNFTContract.connect(signer).approve(
           PRESENT_PROTOCOL_ADDY,
@@ -164,29 +164,36 @@ export function SelectNFT() {
         setApprovalStatus("success");
         console.log("approval granted")
 
-        console.log("requesting wrapping");
-        const wrap = await PresentProtocolContract.wrap(
-          selectedNFT.collection_address,
-          selectedNFT.token_id,
-          resolvedAddress
-        );
+        try {
+          console.log("requesting wrapping");
+          const wrap = await PresentProtocolContract.wrap(
+            selectedNFT.collection_address,
+            selectedNFT.token_id,
+            resolvedAddress
+          );
 
-        setWrapStatus("info");
-        console.log("wrapping request sent")
-        await wrap.wait();
-        console.log("wrap done");
-        setWrapStatus("success");
+          setWrapStatus("info");
+          console.log("wrapping request sent")
+          await wrap.wait();
+          console.log("wrap done");
+          setWrapStatus("success");
+        }
+        catch (error) {
+          setWrapStatus("error");
+          console.log("wrap error", error);
+        }
       }
-      else {
-        // 1155 approval
-        // I actually don't know if we opensea api even sees 1155s
-
+      catch (error) {
+        setApprovalStatus("error");
+        console.log("approval error", error);
       }
-
-    } catch (error) {
-      // alert(error.message);
-      console.log(error);
     }
+    else {
+      // 1155 approval
+      // I actually don't know if we opensea api even sees 1155s
+
+    }
+
   }
 
   return (
