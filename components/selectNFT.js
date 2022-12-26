@@ -34,6 +34,7 @@ export function SelectNFT() {
   // Status goes default, info (pending), success, error
   const [approvalStatus, setApprovalStatus] = useState("default")
   const [wrapStatus, setWrapStatus] = useState("default")
+  const [errorMessage, setErrorMessage] = useState("")
   const color = "white";
 
   // todo - on success render the x to close
@@ -97,6 +98,7 @@ export function SelectNFT() {
       setWrapModal(false);
       setApprovalStatus("default");
       setWrapStatus("default");
+      setErrorMessage("");
     }
   }
 
@@ -180,11 +182,13 @@ export function SelectNFT() {
         }
         catch (error) {
           setWrapStatus("error");
+          setErrorMessage(error.message);
           console.log("wrap error", error);
         }
       }
       catch (error) {
         setApprovalStatus("error");
+        setErrorMessage(error.message);
         console.log("approval error", error);
       }
     }
@@ -267,6 +271,7 @@ export function SelectNFT() {
             approvalStatus={approvalStatus}
             handleClose={closeWrapNFTModal}
             nft={selectedNFT}
+            errorMessage={errorMessage}
           />
         </div>
       </Container>

@@ -1,5 +1,5 @@
-import { Dialog, DialogTitle, DialogContent, CircularProgress, Chip } from "@mui/material";
-import { Check, Error, Pause } from "@mui/icons-material";
+import { Dialog, DialogTitle, DialogContent, CircularProgress, Chip, Alert, AlertTitle } from "@mui/material";
+import { Check, Error, Pause, Close } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function WrapNFTModal(props) {
@@ -15,8 +15,19 @@ export default function WrapNFTModal(props) {
             maxWidth={"lg"}
         >
             <DialogTitle>Wrapping your Gift</DialogTitle>
+            {(props.approvalStatus === "error" || props.wrapStatus === "error" || props.wrapStatus === "success") &&
+                <div className="close-button" onClick={props.handleClose}>
+                    <Close />
+                </div>
+            }
             <DialogContent dividers>
                 <div className="modal-content">
+                    {(props.approvalStatus === "error" || props.wrapStatus === "error") &&
+                        <Alert severity="error" variant="filled" className={isDesktop ? "error-alert w-30" : "error-alert w-15"}>
+                            <AlertTitle>Error</AlertTitle>
+                            {props.errorMessage.split("(")[0]}
+                        </Alert>
+                    }
                     <div style={{ margin: ".5rem" }}>
                         <Chip
                             icon={
