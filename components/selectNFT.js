@@ -17,6 +17,7 @@ import { Button, TextField } from '@mui/material';
 
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from 'dayjs';
+import WrapNFTModal from './wrapNFTModal';
 
 // todo handle errors
 
@@ -29,6 +30,14 @@ export function SelectNFT() {
     useDynamicContext();
   const [resolvedAddress, setResolvedAddress] = useState("");
   const [unwrapDate, setUnwrapDate] = useState();
+  const [wrapModal, setWrapModal] = useState(true);
+  // Status goes default, info (pending), success, error
+  const [approvalStatus, setApprovalStatus] = useState("default")
+  const [wrapStatus, setWrapStatus] = useState("default")
+  const color = "white";
+
+  // todo - on success render the x to close
+
 
   // Getting all the user's NFTs
   const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -62,7 +71,6 @@ export function SelectNFT() {
 
       setPresentProtocolContract(presentProtocolContract);
     }
-    console.log(PresentProtocolContract);
   }, [user, walletConnector]);
 
   const openSelectModal = async () => {
@@ -82,6 +90,14 @@ export function SelectNFT() {
 
   function closeSelectModal() {
     setSelectModalOpen(false);
+  }
+
+  function closeWrapNFTModal() {
+    if (approvalStatus === "error" || wrapStatus === "success" || wrapStatus === "error") {
+      setWrapModal(false);
+      setApprovalStatus("default");
+      setWrapStatus("default");
+    }
   }
 
   async function selectNFT(nft) {
@@ -124,33 +140,54 @@ export function SelectNFT() {
   }
 
   async function wrapNFT() {
-    console.log('Wrapping nft!', resolvedAddress, selectedNFT.collection_address, unwrapDate);
-
+    console.log('Wrapping nft!', resolvedAddress, selectedNFT.collection_address, selectedNFT.token_id);
+    setWrapModal(true);
     // todo - fix wrapping approval
     // todo - confirm user logged in
 
     try {
-      // Approve txn - need to also add for 1155 (check if it's an 1155 or 721 and then use the proper approve func)
-      //   const approval = await PresentProtocolContract.approve(
-      //     walletAddressToSendTo,
-      //     selectedNFT.token_id
-      //   );
-      //   await approval.wait();
+      if (selectedNFT.schema === "ERC721") {
+        const abi = ["function approve(address _spender, uint256 _value) public returns (bool success)"];
+        const provider = walletConnector.getWeb3Provider();
+        const signer = provider.getSigner();
 
-      // Wrap NFT (and send)
-      const wrap = await PresentProtocolContract.wrap(
-        selectedNFT.collection_address,
-        selectedNFT.token_id,
-        resolvedAddress
-      );
-      await wrap.wait();
+        const specificNFTContract = new ethers.Contract(selectedNFT.collection_address, abi, provider);
+
+        console.log("requesting approval for", selectedNFT.collection_address);
+        const approval = await specificNFTContract.connect(signer).approve(
+          PRESENT_PROTOCOL_ADDY,
+          selectedNFT.token_id
+        );
+        setApprovalStatus("info");
+
+        await approval.wait();
+        setApprovalStatus("success");
+        console.log("approval granted")
+
+        console.log("requesting wrapping");
+        const wrap = await PresentProtocolContract.wrap(
+          selectedNFT.collection_address,
+          selectedNFT.token_id,
+          resolvedAddress
+        );
+
+        setWrapStatus("info");
+        console.log("wrapping request sent")
+        await wrap.wait();
+        console.log("wrap done");
+        setWrapStatus("success");
+      }
+      else {
+        // 1155 approval
+        // I actually don't know if we opensea api even sees 1155s
+
+      }
+
     } catch (error) {
-      alert(error.message);
+      // alert(error.message);
       console.log(error);
     }
   }
-
-  const color = "white";
 
   return (
     <div className='gifting-bg'>
@@ -169,12 +206,6 @@ export function SelectNFT() {
               </div>
             }
           </div>
-          <SelectNFTModal
-            open={selectModalOpen}
-            handleClose={closeSelectModal}
-            nfts={nfts}
-            selectNFT={selectNFT}
-          />
           {selectedNFT &&
             <div className='form-inputs'>
               <div style={{ margin: "1.5rem" }}>
@@ -217,6 +248,19 @@ export function SelectNFT() {
               </Button>
             </div>
           }
+          <SelectNFTModal
+            open={selectModalOpen}
+            handleClose={closeSelectModal}
+            nfts={nfts}
+            selectNFT={selectNFT}
+          />
+          <WrapNFTModal
+            wrapModal={wrapModal}
+            wrapStatus={wrapStatus}
+            approvalStatus={approvalStatus}
+            handleClose={closeWrapNFTModal}
+            nft={selectedNFT}
+          />
         </div>
       </Container>
     </div>
