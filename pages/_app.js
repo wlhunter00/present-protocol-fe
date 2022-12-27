@@ -5,6 +5,9 @@ import Head from 'next/head';
 import { Header } from '../components/header';
 import { Pacifico } from '@next/font/google';
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
 const pacficio = Pacifico({ subsets: ['latin'], weight: '400' });
 
 export default function App({ Component, pageProps }) {
@@ -23,13 +26,15 @@ export default function App({ Component, pageProps }) {
         // termsOfServiceUrl: "/termsofservice",
       }}
     >
-      <main className={pacficio.className}>
-        <Head>
-          <title>Present Protocol</title>
-        </Head>
-        <Header />
-        <Component {...pageProps} />
-      </main>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <main className={pacficio.className}>
+          <Head>
+            <title>Present Protocol</title>
+          </Head>
+          <Header />
+          <Component {...pageProps} />
+        </main>
+      </LocalizationProvider>
     </DynamicContextProvider>
   );
 }
