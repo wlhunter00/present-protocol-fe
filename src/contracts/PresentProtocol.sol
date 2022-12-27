@@ -14,13 +14,18 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     bytes4 constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
 
-    string  public baseURI;
+    string public baseURI;
     uint256 public currentId;
     mapping(uint256 => bytes) public presents;
 
     constructor() ERC721("PresentProtocol", "PRESENT") {}
 
-    function wrap(address _nftContract, uint256 _tokenId, uint256 _duration, address _to) external {
+    function wrap(
+        address _nftContract,
+        uint256 _tokenId,
+        uint256 _duration,
+        address _to
+    ) external {
         if (ERC165Checker.supportsInterface(_nftContract, _INTERFACE_ID_ERC721)) {
             IERC721(_nftContract).safeTransferFrom(msg.sender, address(this), _tokenId);
         } else if (ERC165Checker.supportsInterface(_nftContract, _INTERFACE_ID_ERC1155)) {
@@ -57,15 +62,35 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
         baseURI = _baseURI;
     }
 
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC1155Receiver) returns (bool) {
-        return interfaceId == type(IERC1155Receiver).interfaceId || super.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC721, ERC1155Receiver)
+        returns (bool)
+    {
+        return
+            interfaceId == type(IERC1155Receiver).interfaceId ||
+            super.supportsInterface(interfaceId);
     }
 
-    function _encode(address _nftContract, uint256 _tokenId, uint256 _duration) internal pure returns (bytes memory data) {
+    function _encode(
+        address _nftContract,
+        uint256 _tokenId,
+        uint256 _duration
+    ) internal pure returns (bytes memory data) {
         data = abi.encode(_nftContract, _tokenId, _duration);
     }
 
-    function _decode(bytes memory _data) internal pure returns (address nftContract, uint256 tokenId, uint256 duration) {
+    function _decode(bytes memory _data)
+        internal
+        pure
+        returns (
+            address nftContract,
+            uint256 tokenId,
+            uint256 duration
+        )
+    {
         (nftContract, tokenId, duration) = abi.decode(_data, (address, uint256, uint256));
     }
 }
