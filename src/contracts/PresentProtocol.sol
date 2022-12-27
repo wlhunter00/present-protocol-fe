@@ -20,8 +20,9 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
 
     constructor() ERC721("PresentProtocol", "PRESENT") {}
 
-    function wrap(address _to, bytes calldata _nftData) external {
-        (address nftContract, uint256 tokenId, ) = _decode(_nftData);
+    function wrap(bytes calldata _gift, address _to) external {
+        bytes memory present = abi.encode(msg.sender, _gift);
+        (, address nftContract, uint256 tokenId, , ) = _decode(present);
 
         if (ERC165Checker.supportsInterface(nftContract, _INTERFACE_ID_ERC721)) {
             IERC721(nftContract).safeTransferFrom(msg.sender, address(this), tokenId);
@@ -31,15 +32,16 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
             revert InvalidContract();
         }
 
-        presents[++currentId] = _nftData;
+        presents[++currentId] = present;
         _safeMint(_to, currentId);
 
-        emit Wrapped(msg.sender, _to, currentId, _nftData);
+        emit Wrapped(msg.sender, _to, currentId, present);
     }
 
     function unwrap(uint256 _presentId) external {
         if (ownerOf(_presentId) != msg.sender) revert NotAuthorized();
-        (address nftContract, uint256 tokenId, uint256 duration) = _decode(presents[_presentId]);
+        bytes memory present = presents[_presentId];
+        (, address nftContract, uint256 tokenId, uint256 duration, ) = _decode(present);
         if (duration > block.timestamp) revert TimeNotElapsed();
 
         _burn(_presentId);
@@ -61,9 +63,10 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     function encode(
         address _nftContract,
         uint256 _tokenId,
-        uint256 _duration
-    ) external pure returns (bytes memory data) {
-        data = abi.encode(_nftContract, _tokenId, _duration);
+        uint256 _duration,
+        string memory _message
+    ) external pure returns (bytes memory gift) {
+        gift = abi.encode(_nftContract, _tokenId, _duration, _message);
     }
 
     function supportsInterface(bytes4 interfaceId)
@@ -78,15 +81,20 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
             super.supportsInterface(interfaceId);
     }
 
-    function _decode(bytes memory _data)
+    function _decode(bytes memory _present)
         internal
         pure
         returns (
+            address gifter,
             address nftContract,
             uint256 tokenId,
-            uint256 duration
+            uint256 duration,
+            string memory message
         )
     {
-        (nftContract, tokenId, duration) = abi.decode(_data, (address, uint256, uint256));
+        (gifter, nftContract, tokenId, duration, message) = abi.decode(
+            _present,
+            (address, address, uint256, uint256, string)
+        );
     }
 }

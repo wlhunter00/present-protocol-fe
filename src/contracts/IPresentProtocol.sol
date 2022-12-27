@@ -10,7 +10,7 @@ interface IPresentProtocol {
         address indexed _gifter,
         address indexed _receiver,
         uint256 indexed _presentId,
-        bytes _nftData
+        bytes _present
     );
 
     event Unwrapped(
@@ -27,15 +27,15 @@ interface IPresentProtocol {
     function encode(
         address _nftContract,
         uint256 _tokenId,
-        uint256 _duration
-    ) external pure returns (bytes memory data);
+        uint256 _duration,
+        string memory _message
+    ) external pure returns (bytes memory gift);
 
     function presents(uint256) external view returns (bytes memory);
 
+    function setBaseURI(string calldata _baseURI) external payable;
+
     function unwrap(uint256 _presentId) external;
 
-    function wrap(
-        address _to,
-        bytes calldata _nftData
-    ) external;
+    function wrap(bytes calldata _gift, address _to) external;
 }
