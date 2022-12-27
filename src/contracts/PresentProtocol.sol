@@ -41,8 +41,8 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     function unwrap(uint256 _presentId) external {
         if (ownerOf(_presentId) != msg.sender) revert NotAuthorized();
         bytes memory present = presents[_presentId];
-        (, address nftContract, uint256 tokenId, uint256 duration, ) = _decode(present);
-        if (duration > block.timestamp) revert TimeNotElapsed();
+        (, address nftContract, uint256 tokenId, uint256 timelock, ) = _decode(present);
+        if (timelock > block.timestamp) revert TimeNotElapsed();
 
         _burn(_presentId);
         delete presents[_presentId];
@@ -63,10 +63,10 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     function encode(
         address _nftContract,
         uint256 _tokenId,
-        uint256 _duration,
-        string memory _message
+        uint256 _timelock,
+        string calldata _message
     ) external pure returns (bytes memory gift) {
-        gift = abi.encode(_nftContract, _tokenId, _duration, _message);
+        gift = abi.encode(_nftContract, _tokenId, _timelock, _message);
     }
 
     function supportsInterface(bytes4 interfaceId)
@@ -88,11 +88,11 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
             address gifter,
             address nftContract,
             uint256 tokenId,
-            uint256 duration,
+            uint256 timelock,
             string memory message
         )
     {
-        (gifter, nftContract, tokenId, duration, message) = abi.decode(
+        (gifter, nftContract, tokenId, timelock, message) = abi.decode(
             _present,
             (address, address, uint256, uint256, string)
         );

@@ -27,8 +27,8 @@ interface IPresentProtocol {
     function encode(
         address _nftContract,
         uint256 _tokenId,
-        uint256 _duration,
-        string memory _message
+        uint256 _timelock,
+        string calldata _message
     ) external pure returns (bytes memory gift);
 
     function presents(uint256) external view returns (bytes memory);
