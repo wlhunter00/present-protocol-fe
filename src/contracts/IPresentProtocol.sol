@@ -24,6 +24,12 @@ interface IPresentProtocol {
 
     function currentId() external view returns (uint256);
 
+    function encode(
+        address _nftContract,
+        uint256 _tokenId,
+        uint256 _duration
+    ) external pure returns (bytes memory data);
+
     function presents(uint256) external view returns (bytes memory);
 
     function unwrap(uint256 _presentId) external;

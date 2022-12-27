@@ -22,6 +22,7 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
 
     function wrap(address _to, bytes calldata _nftData) external {
         (address nftContract, uint256 tokenId, ) = _decode(_nftData);
+
         if (ERC165Checker.supportsInterface(nftContract, _INTERFACE_ID_ERC721)) {
             IERC721(nftContract).safeTransferFrom(msg.sender, address(this), tokenId);
         } else if (ERC165Checker.supportsInterface(nftContract, _INTERFACE_ID_ERC1155)) {
@@ -53,8 +54,16 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
         emit Unwrapped(msg.sender, nftContract, tokenId, _presentId);
     }
 
-    function setBaseURI(string calldata _baseURI) external onlyOwner {
+    function setBaseURI(string calldata _baseURI) external payable onlyOwner {
         baseURI = _baseURI;
+    }
+
+    function encode(
+        address _nftContract,
+        uint256 _tokenId,
+        uint256 _duration
+    ) external pure returns (bytes memory data) {
+        data = abi.encode(_nftContract, _tokenId, _duration);
     }
 
     function supportsInterface(bytes4 interfaceId)
