@@ -1,7 +1,12 @@
 import Container from '@mui/material/Container';
 import { SelectNFT } from '../components/selectNFT';
+import MyPresents from '../components/myPresents';
+import { useDynamicContext } from '@dynamic-labs/sdk-react';
+
 
 export default function Home() {
+  const { user } = useDynamicContext();
+
   return (
     <>
       <div>
@@ -13,6 +18,8 @@ export default function Home() {
             unwrap them to receive your gift!
           </p>
         </Container>
+
+        {user && <MyPresents />}
         <SelectNFT />
       </div>
     </>

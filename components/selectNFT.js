@@ -26,8 +26,7 @@ export function SelectNFT() {
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [PresentProtocolContract, setPresentProtocolContract] = useState();
   const [walletAddressToSendTo, setWalletAddressToSendTo] = useState(null);
-  const { user, walletConnector, setShowAuthFlow, showAuthFlow } =
-    useDynamicContext();
+  const { user, walletConnector, setShowAuthFlow } = useDynamicContext();
   const [resolvedAddress, setResolvedAddress] = useState("");
   const [unwrapDate, setUnwrapDate] = useState();
   const [wrapModal, setWrapModal] = useState(false);
