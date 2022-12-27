@@ -178,13 +178,13 @@ export function SelectNFT() {
           setWrapStatus("info");
           console.log("wrapping request sent")
           const wraptxt = await wrap.wait();
-          console.log(wraptxt.events[3]);
+          console.log(wraptxt);
           console.log("wrap done");
-          setSuccessData(wraptxt.events[3]);
+          setSuccessData(wraptxt);
           setWrapStatus("success");
 
           setResolvedAddress("");
-          setUnwrapDate();
+          setUnwrapDate(dayjs());
           setSelectedNFT(null);
         }
         catch (error) {
@@ -254,7 +254,9 @@ export function SelectNFT() {
                 resolvedAddress={resolvedAddress}
                 selectedNFT={selectedNFT}
               />
-              <p className="confirmation" style={{ marginBottom: "1rem" }}>They will be able to open it on: <i>{unwrapDate.format('MM/DD/YYYY')}</i></p>
+              {unwrapDate &&
+                <p className="confirmation" style={{ marginBottom: "1rem" }}>They will be able to open it on: <i>{unwrapDate.format('MM/DD/YYYY')}</i></p>
+              }
               <Button
                 variant="contained"
                 color="success"

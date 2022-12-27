@@ -13,14 +13,16 @@ export default function WrapNFTModal(props) {
     const [triggerConfetti, setTriggerConfetti] = useState(false);
     const [recieverAddress, setrecieverAddress] = useState("");
     const [giftID, setGiftID] = useState("");
+    const [transactionID, setTransactionID] = useState("");
 
     useEffect(() => {
         if (props.successData) {
-            console.log(props.successData);
-            console.log("sent to:", props.successData.args['_receiver']);
-            setrecieverAddress(props.successData.args['_receiver']);
-            console.log("gift number:", props.successData.args['_presentId'].toNumber());
-            setGiftID(props.successData.args['_presentId'].toNumber());
+            console.log(props.successData.events[3]);
+            console.log("sent to:", props.successData.events[3].args['_receiver']);
+            setrecieverAddress(props.successData.events[3].args['_receiver']);
+            console.log("gift number:", props.successData.events[3].args['_presentId'].toNumber());
+            setGiftID(props.successData.events[3].args['_presentId'].toNumber());
+            setTransactionID(props.successData.transactionHash);
         }
     }, [props.successData])
 
@@ -55,7 +57,7 @@ export default function WrapNFTModal(props) {
                                 {props.errorMessage.split("(")[0]}
                             </Alert>
                         }
-                        {(props.approvalStatus === "info" || (props.approvalStatus === "success" && props.wrapStatus === "info")) &&
+                        {(props.approvalStatus === "info" || (props.approvalStatus === "success" && props.wrapStatus != "success")) &&
                             <Image
                                 src={wrapGIF}
                                 width={isDesktop ? 400 : 312}
@@ -100,6 +102,14 @@ export default function WrapNFTModal(props) {
                                         height={50}
                                         alt="opensea"
                                     />
+                                </a>
+                                <a
+                                    className="success-link"
+                                    target="_blank"
+                                    href={`https://goerli.etherscan.io/tx/${transactionID}`}
+                                    rel="noopener noreferrer"
+                                >
+                                    <p style={{ marginTop: "1rem" }} className="confirmation">Transaction Confirmation</p>
                                 </a>
                             </div>
                         }
