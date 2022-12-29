@@ -4,8 +4,7 @@ import useSWR from 'swr';
 import { useDynamicContext } from '@dynamic-labs/sdk-react';
 import { PresentCard } from "./presentCard";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
-
+import UnwrapNFTModal from "./unwrapNFTModal";
 
 // Contract info
 import { PRESENT_PROTOCOL_ADDY } from '../contractAddresses';
@@ -17,6 +16,15 @@ export default function MyPresents() {
     const { user, walletConnector } = useDynamicContext();
     const [PresentProtocolContract, setPresentProtocolContract] = useState();
     const isDesktop = useMediaQuery("(min-width:600px)");
+
+    const [unwrapModal, setUnwrapModal] = useState(false);
+    const [unwrapStatus, setUnwrapStatus] = useState("default");
+    const [errorMessage, setErrorMessage] = useState("");
+    // const [successData, setSuccessData] = useState();
+
+    // todo - render success data
+    // todo - filter the opened gifts
+
 
     // Setting the contract
     useEffect(() => {
@@ -43,17 +51,37 @@ export default function MyPresents() {
         fetcher
     );
 
+    function closeUnwrapNFTModal() {
+        if (unwrapStatus === "success" || unwrapStatus === "error") {
+            setUnwrapModal(false);
+            setUnwrapStatus("default");
+            setErrorMessage("");
+            // setSuccessData();
+        }
+    }
+
     async function unwrap(giftId, canUnwrap) {
         console.log("Unwrapping gift", giftId, canUnwrap);
+        if (canUnwrap) {
+            setUnwrapModal(true);
+            try {
+                const unwrap = await PresentProtocolContract.unwrap(giftId);
+                setUnwrapStatus("info");
 
-        try {
-            const unwrap = await PresentProtocolContract.unwrap(giftId);
-            const unwraptxt = await unwrap.wait();
-            console.log(unwraptxt)
-
+                const unwraptxt = await unwrap.wait();
+                console.log(unwraptxt);
+                setUnwrapStatus("success");
+            }
+            catch (error) {
+                setUnwrapStatus("error");
+                setErrorMessage(error.message);
+                console.log("unwrap error", error);
+                // todo - get the correct metamask error
+            }
         }
-        catch (err) {
-            console.log(err);
+        else {
+            // todo - handle this case
+            console.log("Can't unwrap");
         }
     }
 
@@ -74,6 +102,14 @@ export default function MyPresents() {
                     </Grid>
                 </div>
             }
+            <UnwrapNFTModal
+                unwrapModal={unwrapModal}
+                unwrapStatus={unwrapStatus}
+                handleClose={closeUnwrapNFTModal}
+                // nft={selectedNFT}
+                errorMessage={errorMessage}
+            // successData={successData}
+            />
         </Container>
     )
 };
