@@ -43,7 +43,7 @@ export function SelectNFT() {
   // Getting all the user's NFTs
   const fetcher = (url) => fetch(url).then((r) => r.json());
   const { data: nfts, error: nftsError } = useSWR(
-    user ? `/api/nfts?userWallet=${user.walletPublicKey}` : null,
+    user ? `/api/nfts?userWallet=${user.walletPublicKey}` : [],
     fetcher
   );
 

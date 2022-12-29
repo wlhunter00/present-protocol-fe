@@ -1,30 +1,55 @@
-import { Grid } from "@mui/material"
-import Gift from "../public/new-gift.svg"
+import { Grid } from "@mui/material";
+import Gift from "../public/new-gift.svg";
+import { Redeem, Send } from "@mui/icons-material";
+import dayjs from "dayjs";
+import { useState, useEffect } from "react";
+
 export function PresentCard(props) {
+    const [truncatedAddress, setTruncatedAddress] = useState("");
+    const [canUnwrap, setCanUnwrap] = useState(false);
+
     const address = "0x69EC014c15baF1C96620B6BA02A391aBaBB9C96b";
-    const truncatedAddress = address.substring(0, 4) + "..." + address.slice(-4);
+    const unwrapDate = dayjs('12-25-2022');
+
+    useEffect(() => {
+        setTruncatedAddress(address.substring(0, 4) + "..." + address.slice(-4));
+        if (unwrapDate > dayjs()) {
+            setCanUnwrap(false);
+        }
+        else {
+            setCanUnwrap(true);
+        }
+    }, []);
+
+    //todo - maybe add an on-hover effect and phootshop the present being opened
 
     return (
         <Grid item xs={3}>
-            <div className="gift-card">
+            <div className="gift-card highlight-hover">
                 <div
                     style={{ cursor: "pointer" }}
-                    onClick={() => props.unwrap(props.nft.token_id)}
+                    onClick={() => props.unwrap(props.nft.token_id, canUnwrap)}
                 >
                     <Gift width="200px" height="200px" />
                 </div>
-                <p className="body">Present {props.nft.token_id}</p>
-                <p className="body">From
-                    <a
-                        style={{ textDecoration: "none", marginLeft: ".3rem" }}
-                        target="_blank"
-                        href={`https://goerli.etherscan.io/addess/${address}`}
-                        rel="noopener noreferrer">
-                        {truncatedAddress}
-                    </a>
-                </p>
+                <p className="gift-text">Present {props.nft.token_id}</p>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", color: "blue" }}>
+                    <Send />
+                    <p className="gift-text no-cursive">
+                        <a
+                            style={{ textDecoration: "none", marginLeft: ".3rem" }}
+                            target="_blank"
+                            href={`https://goerli.etherscan.io/address/${address}`}
+                            rel="noopener noreferrer">
+                            {truncatedAddress}
+                        </a>
+                    </p>
+                </div>
                 {/* Add a tooltip for date */}
-                <p className="body">12/25/22</p>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }} className={canUnwrap ? "can-unwrap" : "cant-unwrap"}>
+                    <Redeem />
+                    <p className="gift-text no-cursive" style={{ margin: ".5rem" }}>{unwrapDate.format('MM/DD/YY')}</p>
+                </div>
             </div>
         </Grid>
     )
