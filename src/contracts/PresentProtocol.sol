@@ -14,9 +14,10 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     bytes4 constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
 
-    string public baseURI;
+    string  public baseURI;
     uint256 public currentId;
     uint256 public fee;
+
     mapping(uint256 => bytes) public presents;
 
     constructor() ERC721("PresentProtocol", "PRESENT") {}

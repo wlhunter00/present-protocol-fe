@@ -33,6 +33,8 @@ interface IPresentProtocol {
         string calldata _message
     ) external pure returns (bytes memory gift);
 
+    function fee() external view returns (uint256);
+
     function presents(uint256) external view returns (bytes memory);
 
     function setBaseURI(string calldata _baseURI) external payable;
