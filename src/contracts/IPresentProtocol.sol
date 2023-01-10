@@ -12,6 +12,7 @@ interface IPresentProtocol {
         address indexed _gifter,
         address indexed _receiver,
         uint256 indexed _presentId,
+        string _message,
         bytes _present
     );
 
@@ -29,8 +30,7 @@ interface IPresentProtocol {
     function encode(
         address _nftContract,
         uint256 _tokenId,
-        uint256 _timelock,
-        string calldata _message
+        uint256 _timelock
     ) external pure returns (bytes memory gift);
 
     function fee() external view returns (uint256);
@@ -45,5 +45,5 @@ interface IPresentProtocol {
 
     function unwrap(uint256 _presentId) external;
 
-    function wrap(bytes calldata _gift, address _to) external;
+    function wrap(bytes calldata _gift, address _to, string calldata _message) external payable;
 }

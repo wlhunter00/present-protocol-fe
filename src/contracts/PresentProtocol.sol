@@ -11,22 +11,23 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 import "./IPresentProtocol.sol";
 
 contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holder, Ownable {
+    using Strings for uint256;
     bytes4 constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
-
     string  public baseURI;
     uint256 public currentId;
     uint256 public fee;
-
     mapping(uint256 => bytes) public presents;
+    mapping(uint256 => string) private messages;
 
     constructor() ERC721("PresentProtocol", "PRESENT") {}
 
-    function wrap(bytes calldata _gift, address _to) external payable {
+    function wrap(bytes calldata _gift, address _to, string calldata _message) external payable {
         if (msg.value != fee) revert InvalidPayment();
+        if (strlen(_message) > 280) revert InvalidMessage();
+
         bytes memory present = abi.encode(msg.sender, _gift);
-        (, address nftContract, uint256 tokenId, , string memory message) = _decode(present);
-        if (strlen(message) > 280) revert InvalidMessage();
+        (, address nftContract, uint256 tokenId, ) = _decode(present);
 
         if (ERC165Checker.supportsInterface(nftContract, _INTERFACE_ID_ERC721)) {
             IERC721(nftContract).safeTransferFrom(msg.sender, address(this), tokenId);
@@ -37,19 +38,21 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
         }
 
         presents[++currentId] = present;
+        messages[currentId] = _message;
         _safeMint(_to, currentId);
 
-        emit Wrapped(msg.sender, _to, currentId, present);
+        emit Wrapped(msg.sender, _to, currentId, _message, present);
     }
 
     function unwrap(uint256 _presentId) external {
         if (ownerOf(_presentId) != msg.sender) revert NotAuthorized();
         bytes memory present = presents[_presentId];
-        (, address nftContract, uint256 tokenId, uint256 timelock, ) = _decode(present);
+        (, address nftContract, uint256 tokenId, uint256 timelock) = _decode(present);
         if (timelock > block.timestamp) revert TimeNotElapsed();
 
         _burn(_presentId);
         delete presents[_presentId];
+        delete messages[_presentId];
 
         if (ERC165Checker.supportsInterface(nftContract, _INTERFACE_ID_ERC721)) {
             IERC721(nftContract).safeTransferFrom(address(this), msg.sender, tokenId);
@@ -71,10 +74,9 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     function encode(
         address _nftContract,
         uint256 _tokenId,
-        uint256 _timelock,
-        string calldata _message
+        uint256 _timelock
     ) external pure returns (bytes memory gift) {
-        gift = abi.encode(_nftContract, _tokenId, _timelock, _message);
+        gift = abi.encode(_nftContract, _tokenId, _timelock);
     }
 
     function supportsInterface(bytes4 interfaceId)
@@ -87,6 +89,36 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
         return
             interfaceId == type(IERC1155Receiver).interfaceId ||
             super.supportsInterface(interfaceId);
+    }
+
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        _requireMinted(tokenId);
+        string memory name = string.concat("Present #", tokenId.toString());
+        string memory message = messages[tokenId];
+        bytes memory present = presents[tokenId];
+        (address gifter, , , uint256 timelock) = _decode(present);
+        return
+            string(
+                abi.encodePacked(
+                    "data:application/json;utf8,",
+                    '{"name":"',
+                        name,
+                    '",',
+                    '"description":"Present Protocol",'
+                    '"external_url":"https://presentprotocol.xyz"',
+                    '"image":"Gift wrap an NFT and send it to your frens."',
+                    '"gifter":"',
+                        gifter,
+                    '",',
+                    '"message":"',
+                        message,
+                    '",',
+                    '"attributes": [{"display_type": "Date","trait_type": "Unwrapping","value":"',
+                        timelock,
+                    '"}]'
+                    '}'
+                )
+            );
     }
 
     function strlen(string memory str) public pure returns (uint256 len) {
@@ -117,13 +149,12 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
             address gifter,
             address nftContract,
             uint256 tokenId,
-            uint256 timelock,
-            string memory message
+            uint256 timelock
         )
     {
-        (gifter, nftContract, tokenId, timelock, message) = abi.decode(
+        (gifter, nftContract, tokenId, timelock) = abi.decode(
             _present,
-            (address, address, uint256, uint256, string)
+            (address, address, uint256, uint256)
         );
     }
 }
