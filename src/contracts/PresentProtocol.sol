@@ -16,11 +16,13 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
 
     string public baseURI;
     uint256 public currentId;
+    uint256 public fee;
     mapping(uint256 => bytes) public presents;
 
     constructor() ERC721("PresentProtocol", "PRESENT") {}
 
-    function wrap(bytes calldata _gift, address _to) external {
+    function wrap(bytes calldata _gift, address _to) external payable {
+        if (msg.value != fee) revert InvalidPayment();
         bytes memory present = abi.encode(msg.sender, _gift);
         (, address nftContract, uint256 tokenId, , string memory message) = _decode(present);
         if (strlen(message) > 280) revert InvalidMessage();
@@ -59,6 +61,10 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
 
     function setBaseURI(string calldata _baseURI) external payable onlyOwner {
         baseURI = _baseURI;
+    }
+
+    function setFee(uint256 _fee) external payable onlyOwner {
+        fee = _fee;
     }
 
     function encode(
