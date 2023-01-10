@@ -12,7 +12,6 @@ interface IPresentProtocol {
         address indexed _gifter,
         address indexed _receiver,
         uint256 indexed _presentId,
-        string _message,
         bytes _present
     );
 

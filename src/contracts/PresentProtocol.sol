@@ -41,7 +41,7 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
         messages[currentId] = _message;
         _safeMint(_to, currentId);
 
-        emit Wrapped(msg.sender, _to, currentId, _message, present);
+        emit Wrapped(msg.sender, _to, currentId, present);
     }
 
     function unwrap(uint256 _presentId) external {
