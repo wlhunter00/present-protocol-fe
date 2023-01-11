@@ -14,13 +14,15 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     using Strings for uint256;
     bytes4 constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
+
     string  public baseURI;
     uint256 public currentId;
     uint256 public fee;
+
     mapping(uint256 => bytes) public presents;
     mapping(uint256 => string) private messages;
 
-    constructor() ERC721("PresentProtocol", "PRESENT") {}
+    constructor() ERC721("PresentProtocol", "PRSNT") {}
 
     function wrap(bytes calldata _gift, address _to, string calldata _message) external payable {
         if (msg.value != fee) revert InvalidPayment();
@@ -71,6 +73,10 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
         fee = _fee;
     }
 
+    function withdraw(address payable _to) external payable onlyOwner {
+        _to.transfer(address(this).balance);
+    }
+
     function encode(
         address _nftContract,
         uint256 _tokenId,
@@ -94,8 +100,11 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         _requireMinted(tokenId);
         string memory name = string.concat("Present #", tokenId.toString());
+        string memory description = "Gift NFTs to your frens with Present Protocol.";
+        string memory externalURL = "https://presentprotocol.xyz";
+        string memory image = baseURI;
         string memory message = messages[tokenId];
-        bytes memory present = presents[tokenId];
+        bytes  memory present = presents[tokenId];
         (address gifter, , , uint256 timelock) = _decode(present);
         return
             string(
@@ -104,9 +113,15 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
                     '{"name":"',
                         name,
                     '",',
-                    '"description":"Present Protocol",'
-                    '"external_url":"https://presentprotocol.xyz"',
-                    '"image":"Gift wrap an NFT and send it to your frens."',
+                    '"description":"',
+                        description,
+                    '",',
+                    '"external_url":"',
+                        externalURL,
+                    '",',
+                    '"image":"',
+                        image,
+                    '",',
                     '"gifter":"',
                         gifter,
                     '",',
@@ -121,11 +136,11 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
             );
     }
 
-    function strlen(string memory str) public pure returns (uint256 len) {
+    function strlen(string memory _str) public pure returns (uint256 len) {
         uint256 i;
-        uint256 bytesLength = bytes(str).length;
+        uint256 bytesLength = bytes(_str).length;
         for (len; i < bytesLength; ++len) {
-            bytes1 b = bytes(str)[i];
+            bytes1 b = bytes(_str)[i];
             if (b < 0x80) {
                 i += 1;
             } else if (b < 0xE0) {
