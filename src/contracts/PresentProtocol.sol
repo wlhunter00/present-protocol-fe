@@ -11,25 +11,27 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 import "./IPresentProtocol.sol";
 
 contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holder, Ownable {
+    using Strings for uint160;
     using Strings for uint256;
-    bytes4 constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    bytes4 constant _INTERFACE_ID_ERC721  = 0x80ac58cd;
     bytes4 constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
 
     string  public baseURI;
     uint256 public currentId;
     uint256 public fee;
 
-    mapping(uint256 => bytes) public presents;
+    mapping(uint256 => bytes)  public  presents;
     mapping(uint256 => string) private messages;
 
-    constructor() ERC721("PresentProtocol", "PRSNT") {}
+    constructor() ERC721("Present Protocol", "GIFT") {}
 
     function wrap(bytes calldata _gift, address _to, string calldata _message) external payable {
         if (msg.value != fee) revert InvalidPayment();
         if (strlen(_message) > 280) revert InvalidMessage();
 
-        bytes memory gifter = abi.encode(msg.sender);
-        bytes memory present = abi.encodePacked(gifter, _gift);
+        bytes memory from = abi.encode(msg.sender);
+        bytes memory present = abi.encodePacked(from, _gift);
         (, address nftContract, uint256 tokenId, ) = _decode(present);
 
         if (ERC165Checker.supportsInterface(nftContract, _INTERFACE_ID_ERC721)) {
@@ -100,34 +102,31 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
 
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         _requireMinted(tokenId);
-        string memory name = string.concat("Present #", tokenId.toString());
-        string memory description = "The ultimate protocol for gifting NFTs to your frens.";
-        string memory externalURL = "https://presentprotocol.xyz";
+        string memory name = string.concat("Gift #", tokenId.toString());
+        string memory url = string.concat("https://presentprotocol.xyz/", tokenId.toString());
         string memory image = baseURI;
         string memory message = messages[tokenId];
         bytes  memory present = presents[tokenId];
-        (address gifter, , , uint256 timelock) = _decode(present);
+        (address from, , , uint256 timelock) = _decode(present);
+
         return string(abi.encodePacked('data:application/json;utf8,',
             '{"name":"',
                 name,
             '",',
             '"description":"',
-                description,
+                message,
             '",',
             '"external_url":"',
-                externalURL,
+                url,
             '",',
             '"image":"',
                 image,
             '",',
-            '"gifter":"',
-                gifter,
+            '"from":"',
+                uint160(from).toHexString(20),
             '",',
-            '"message":"',
-                message,
-            '",',
-            '"attributes": [{"display_type":"Date", "trait_type":"Unwrapping", "value":"',
-                timelock,
+            '"attributes": [{"display_type":"Date", "trait_type":"Unwrap", "value":"',
+                timelock.toString(),
             '"}]}'
         ));
     }
@@ -157,13 +156,13 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
         internal
         pure
         returns (
-            address gifter,
+            address from,
             address nftContract,
             uint256 tokenId,
             uint256 timelock
         )
     {
-        (gifter, nftContract, tokenId, timelock) = abi.decode(
+        (from, nftContract, tokenId, timelock) = abi.decode(
             _present,
             (address, address, uint256, uint256)
         );

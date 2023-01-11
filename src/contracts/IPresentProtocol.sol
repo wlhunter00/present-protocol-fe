@@ -9,14 +9,14 @@ interface IPresentProtocol {
     error TimeNotElapsed();
 
     event Wrapped(
-        address indexed _gifter,
-        address indexed _receiver,
+        address indexed _from,
+        address indexed _to,
         uint256 indexed _presentId,
         bytes _present
     );
 
     event Unwrapped(
-        address indexed _receiver,
+        address indexed _owner,
         address indexed _nftContract,
         uint256 indexed _tokenId,
         uint256 _presentId
