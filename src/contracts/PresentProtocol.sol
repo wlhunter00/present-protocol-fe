@@ -131,7 +131,7 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
         ));
     }
 
-    function strlen(string memory _str) public pure returns (uint256 len) {
+    function strlen(string calldata _str) public pure returns (uint256 len) {
         uint256 i;
         uint256 bytesLength = bytes(_str).length;
         for (len; i < bytesLength; ++len) {

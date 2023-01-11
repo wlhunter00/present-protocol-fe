@@ -40,7 +40,7 @@ interface IPresentProtocol {
 
     function setFee(uint256 _fee) external payable;
 
-    function strlen(string memory _str) external pure returns (uint256 len);
+    function strlen(string calldata _str) external pure returns (uint256 len);
 
     function unwrap(uint256 _presentId) external;
 
