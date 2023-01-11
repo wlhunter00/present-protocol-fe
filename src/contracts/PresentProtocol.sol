@@ -28,7 +28,8 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
         if (msg.value != fee) revert InvalidPayment();
         if (strlen(_message) > 280) revert InvalidMessage();
 
-        bytes memory present = abi.encode(msg.sender, _gift);
+        bytes memory gifter = abi.encode(msg.sender);
+        bytes memory present = abi.encodePacked(gifter, _gift);
         (, address nftContract, uint256 tokenId, ) = _decode(present);
 
         if (ERC165Checker.supportsInterface(nftContract, _INTERFACE_ID_ERC721)) {
@@ -100,40 +101,35 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         _requireMinted(tokenId);
         string memory name = string.concat("Present #", tokenId.toString());
-        string memory description = "Gift NFTs to your frens with Present Protocol.";
+        string memory description = "The ultimate protocol for gifting NFTs to your frens.";
         string memory externalURL = "https://presentprotocol.xyz";
         string memory image = baseURI;
         string memory message = messages[tokenId];
         bytes  memory present = presents[tokenId];
         (address gifter, , , uint256 timelock) = _decode(present);
-        return
-            string(
-                abi.encodePacked(
-                    "data:application/json;utf8,",
-                    '{"name":"',
-                        name,
-                    '",',
-                    '"description":"',
-                        description,
-                    '",',
-                    '"external_url":"',
-                        externalURL,
-                    '",',
-                    '"image":"',
-                        image,
-                    '",',
-                    '"gifter":"',
-                        gifter,
-                    '",',
-                    '"message":"',
-                        message,
-                    '",',
-                    '"attributes": [{"display_type": "Date","trait_type": "Unwrapping","value":"',
-                        timelock,
-                    '"}]'
-                    '}'
-                )
-            );
+        return string(abi.encodePacked('data:application/json;utf8,',
+            '{"name":"',
+                name,
+            '",',
+            '"description":"',
+                description,
+            '",',
+            '"external_url":"',
+                externalURL,
+            '",',
+            '"image":"',
+                image,
+            '",',
+            '"gifter":"',
+                gifter,
+            '",',
+            '"message":"',
+                message,
+            '",',
+            '"attributes": [{"display_type":"Date", "trait_type":"Unwrapping", "value":"',
+                timelock,
+            '"}]}'
+        ));
     }
 
     function strlen(string memory _str) public pure returns (uint256 len) {
