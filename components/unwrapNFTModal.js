@@ -11,19 +11,22 @@ import OpenSea from '../public/opensea.png';
 export default function UnwrapNFTModal(props) {
     const isDesktop = useMediaQuery("(min-width:600px)");
     const [triggerConfetti, setTriggerConfetti] = useState(false);
+    const [giftID, setGiftID] = useState("");
+    const [transactionID, setTransactionID] = useState("");
 
-    // const [transactionID, setTransactionID] = useState("");
-
-    // useEffect(() => {
-    //     if (props.successData) {
-    //         console.log(props.successData.events[3]);
-    //         console.log("sent to:", props.successData.events[3].args['_receiver']);
-    //         setrecieverAddress(props.successData.events[3].args['_receiver']);
-    //         console.log("gift number:", props.successData.events[3].args['_presentId'].toNumber());
-    //         setGiftID(props.successData.events[3].args['_presentId'].toNumber());
-    //         setTransactionID(props.successData.transactionHash);
-    //     }
-    // }, [props.successData])
+    useEffect(() => {
+        if (props.successData) {
+            console.log(props.successData.events[3]);
+            // console.log("sent to:", props.successData.events[3].args['_receiver']);
+            // setrRcieverAddress(props.successData.events[3].args['_receiver']);
+            console.log("gift number:", props.successData.events[3].args['_presentId'].toNumber());
+            // TODO: how do we want to use gift number, how do we get the senders address
+            // TODO: actually we don't want to use gift number from this. we want to have this info passed in right away. we don't really actually care about events[3]
+            // TODO: events[2] has the underlying NFT info
+            setGiftID(props.successData.events[3].args['_presentId'].toNumber());
+            setTransactionID(props.successData.transactionHash);
+        }
+    }, [props.successData])
 
     useEffect(() => {
         if (props.unwrapStatus === "success") {
@@ -101,7 +104,7 @@ export default function UnwrapNFTModal(props) {
                                         height={50}
                                         alt="opensea"
                                     />
-                                </a>
+                                </a> */}
                                 <a
                                     className="success-link"
                                     target="_blank"
@@ -109,7 +112,7 @@ export default function UnwrapNFTModal(props) {
                                     rel="noopener noreferrer"
                                 >
                                     <p style={{ marginTop: "1rem" }} className="confirmation">Transaction Confirmation</p>
-                                </a> */}
+                                </a>
                             </div>
                         }
                         <div style={{ margin: ".5rem" }}>
@@ -144,7 +147,7 @@ export default function UnwrapNFTModal(props) {
                     </div>
                     {triggerConfetti && <ConfettiAnimation />}
                 </DialogContent>
-            </div>
-        </ Dialog>
+            </div >
+        </ Dialog >
     )
 };

@@ -145,7 +145,6 @@ export function SelectNFT() {
   async function wrapNFT() {
     console.log('Wrapping nft!', resolvedAddress, selectedNFT.collection_address, selectedNFT.token_id);
     setWrapModal(true);
-    // todo - fix wrapping approval
     // todo - confirm user logged in
 
     if (selectedNFT.schema === "ERC721") {

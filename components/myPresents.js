@@ -20,7 +20,7 @@ export default function MyPresents() {
     const [unwrapModal, setUnwrapModal] = useState(false);
     const [unwrapStatus, setUnwrapStatus] = useState("default");
     const [errorMessage, setErrorMessage] = useState("");
-    // const [successData, setSuccessData] = useState();
+    const [successData, setSuccessData] = useState();
 
     // todo - render success data
     // todo - filter the opened gifts
@@ -56,7 +56,7 @@ export default function MyPresents() {
             setUnwrapModal(false);
             setUnwrapStatus("default");
             setErrorMessage("");
-            // setSuccessData();
+            setSuccessData();
         }
     }
 
@@ -70,13 +70,15 @@ export default function MyPresents() {
 
                 const unwraptxt = await unwrap.wait();
                 console.log(unwraptxt);
+                console.log("unwrapped successful");
+                setSuccessData(unwraptxt);
                 setUnwrapStatus("success");
             }
             catch (error) {
                 setUnwrapStatus("error");
                 setErrorMessage(error.message);
                 console.log("unwrap error", error);
-                // todo - get the correct metamask error
+                // TODO - parse the error message better
             }
         }
         else {
@@ -106,9 +108,8 @@ export default function MyPresents() {
                 unwrapModal={unwrapModal}
                 unwrapStatus={unwrapStatus}
                 handleClose={closeUnwrapNFTModal}
-                // nft={selectedNFT}
                 errorMessage={errorMessage}
-            // successData={successData}
+                successData={successData}
             />
         </Container>
     )

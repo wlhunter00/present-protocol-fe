@@ -11,7 +11,7 @@ import OpenSea from '../public/opensea.png';
 export default function WrapNFTModal(props) {
     const isDesktop = useMediaQuery("(min-width:600px)");
     const [triggerConfetti, setTriggerConfetti] = useState(false);
-    const [recieverAddress, setrecieverAddress] = useState("");
+    const [recieverAddress, setRecieverAddress] = useState("");
     const [giftID, setGiftID] = useState("");
     const [transactionID, setTransactionID] = useState("");
 
@@ -19,7 +19,7 @@ export default function WrapNFTModal(props) {
         if (props.successData) {
             console.log(props.successData.events[3]);
             console.log("sent to:", props.successData.events[3].args['_receiver']);
-            setrecieverAddress(props.successData.events[3].args['_receiver']);
+            setRecieverAddress(props.successData.events[3].args['_receiver']);
             console.log("gift number:", props.successData.events[3].args['_presentId'].toNumber());
             setGiftID(props.successData.events[3].args['_presentId'].toNumber());
             setTransactionID(props.successData.transactionHash);

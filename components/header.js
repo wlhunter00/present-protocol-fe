@@ -11,6 +11,7 @@ export function Header() {
         paddingRight: isDesktop ? "10rem" : "1.5rem",
         marginBottom: ".5rem"
     }
+    // TODO: figure out how to have the warning about being on the wrong chain
 
     return (
         <header
