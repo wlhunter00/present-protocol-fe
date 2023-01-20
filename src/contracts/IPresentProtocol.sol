@@ -19,6 +19,7 @@ interface IPresentProtocol {
         address indexed _owner,
         address indexed _nftContract,
         uint256 indexed _tokenId,
+        address _from,
         uint256 _presentId
     );
 

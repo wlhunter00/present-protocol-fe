@@ -52,7 +52,7 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     function unwrap(uint256 _presentId) external {
         if (ownerOf(_presentId) != msg.sender) revert NotAuthorized();
         bytes memory present = presents[_presentId];
-        (, address nftContract, uint256 tokenId, uint256 timelock) = _decode(present);
+        (address from, address nftContract, uint256 tokenId, uint256 timelock) = _decode(present);
         if (timelock > block.timestamp) revert TimeNotElapsed();
 
         _burn(_presentId);
@@ -65,7 +65,7 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
             IERC1155(nftContract).safeTransferFrom(address(this), msg.sender, tokenId, 1, "");
         }
 
-        emit Unwrapped(msg.sender, nftContract, tokenId, _presentId);
+        emit Unwrapped(msg.sender, nftContract, tokenId, from, _presentId);
     }
 
     function setBaseURI(string calldata _baseURI) external payable onlyOwner {
