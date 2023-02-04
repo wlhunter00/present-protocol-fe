@@ -14,7 +14,7 @@ export default function SelectNFTModal(props) {
     }, [props.nfts]);
 
     useEffect(() => {
-        if (props.nfts) {
+        if (props.nfts && Array.isArray(searchNFTs)) {
             setSearchNFTs(props.nfts.filter((nft) => (nft.name.toLowerCase().includes(searchQuery) || nft.collection_name.toLowerCase().includes(searchQuery))));
         }
     }, [searchQuery]);
@@ -56,7 +56,7 @@ export default function SelectNFTModal(props) {
                         style={{ alignContent: 'center' }}
                         gap={4}
                     >
-                        {searchNFTs &&
+                        {searchNFTs && Array.isArray(searchNFTs) &&
                             searchNFTs.map((nft, index) => (
                                 <div
                                     onClick={() => props.selectNFT(nft)}

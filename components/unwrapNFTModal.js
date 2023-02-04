@@ -13,17 +13,19 @@ export default function UnwrapNFTModal(props) {
     const [triggerConfetti, setTriggerConfetti] = useState(false);
     const [giftID, setGiftID] = useState("");
     const [transactionID, setTransactionID] = useState("");
+    const [NFTAddress, setNFTAddress] = useState("");
+    const [NFTID, setNFTID] = useState("");
 
     useEffect(() => {
         if (props.successData) {
             console.log(props.successData.events[3]);
-            // console.log("sent to:", props.successData.events[3].args['_receiver']);
-            // setrRcieverAddress(props.successData.events[3].args['_receiver']);
             console.log("gift number:", props.successData.events[3].args['_presentId'].toNumber());
-            // TODO: how do we want to use gift number, how do we get the senders address
-            // TODO: actually we don't want to use gift number from this. we want to have this info passed in right away. we don't really actually care about events[3]
-            // TODO: events[2] has the underlying NFT info
+            console.log("gift address:", props.successData.events[3].args['_nftContract']);
+            console.log("gift id:", props.successData.events[3].args['_tokenId'].toNumber());
+            // TODO: how do we get the senders address
             setGiftID(props.successData.events[3].args['_presentId'].toNumber());
+            setNFTAddress(props.successData.events[3].args['_nftContract']);
+            setNFTID(props.successData.events[3].args['_tokenId'].toNumber());
             setTransactionID(props.successData.transactionHash);
         }
     }, [props.successData])
@@ -69,7 +71,7 @@ export default function UnwrapNFTModal(props) {
                         }
                         {props.unwrapStatus === "success" &&
                             <div style={{ margin: "2rem" }}>
-                                <h2>Present Sucessfully Unwrapped!</h2>
+                                <h2>Present {giftID} Sucessfully Unwrapped!</h2>
                                 <GiftLogo style={{ height: "150px", width: "150px" }} />
                                 {/* TODO - change etherscan link */}
                                 {/* <a
@@ -91,10 +93,19 @@ export default function UnwrapNFTModal(props) {
                                         Gift #{giftID}
                                     </a>
                                 </p>
+                                */}
                                 <a
                                     className="success-link"
                                     target="_blank"
-                                    href={`https://testnets.opensea.io/assets/goerli/0x04bb356146fc2c760d88614b51da38429b9cb6c6/${giftID}`}
+                                    href={`https://goerli.etherscan.io/tx/${transactionID}`}
+                                    rel="noopener noreferrer"
+                                >
+                                    <p style={{ marginTop: "1rem", marginBottom: "1rem" }} className="confirmation">Transaction Confirmation</p>
+                                </a>
+                                <a
+                                    className="success-link"
+                                    target="_blank"
+                                    href={`https://testnets.opensea.io/assets/goerli/${NFTAddress}/${NFTID}`}
                                     rel="noopener noreferrer"
                                     style={{ marginLeft: ".3rem" }}
                                 >
@@ -104,14 +115,6 @@ export default function UnwrapNFTModal(props) {
                                         height={50}
                                         alt="opensea"
                                     />
-                                </a> */}
-                                <a
-                                    className="success-link"
-                                    target="_blank"
-                                    href={`https://goerli.etherscan.io/tx/${transactionID}`}
-                                    rel="noopener noreferrer"
-                                >
-                                    <p style={{ marginTop: "1rem" }} className="confirmation">Transaction Confirmation</p>
                                 </a>
                             </div>
                         }

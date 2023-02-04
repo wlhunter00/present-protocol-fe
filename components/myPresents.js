@@ -97,7 +97,7 @@ export default function MyPresents() {
                         container
                         spacing={2}
                     >
-                        {nfts && nfts.map((nft, index) => (
+                        {Array.isArray(nfts) && nfts.map((nft, index) => (
                             <PresentCard nft={nft} key={index} unwrap={unwrap} />
                         ))
                         }

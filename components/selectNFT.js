@@ -19,8 +19,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from 'dayjs';
 import WrapNFTModal from './wrapNFTModal';
 
-// todo handle errors
-
+// TODO: do I need to ask for apporval everytime?
 export function SelectNFT() {
   const [selectModalOpen, setSelectModalOpen] = useState(false);
   const [selectedNFT, setSelectedNFT] = useState(null);
