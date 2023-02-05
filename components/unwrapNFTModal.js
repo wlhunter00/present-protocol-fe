@@ -3,6 +3,7 @@ import { Check, Error, Pause, Close } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ConfettiAnimation from "./confetti";
 import { useState, useEffect } from "react";
+import DisplayGift from "./displayGift";
 import Image from "next/image";
 import wrapGIF from '../public/box-shake.gif';
 import GiftLogo from '../public/gift.svg';
@@ -72,28 +73,12 @@ export default function UnwrapNFTModal(props) {
                         {props.unwrapStatus === "success" &&
                             <div style={{ margin: "2rem" }}>
                                 <h2>Present {giftID} Sucessfully Unwrapped!</h2>
-                                <GiftLogo style={{ height: "150px", width: "150px" }} />
+                                {/* <GiftLogo style={{ height: "150px", width: "150px" }} /> */}
+                                <DisplayGift
+                                    NFTAddress={NFTAddress}
+                                    NFTID={NFTID}
+                                />
                                 {/* TODO - change etherscan link */}
-                                {/* <a
-                                    className="success-link"
-                                    target="_blank"
-                                    href={`https://goerli.etherscan.io/address/${recieverAddress}`}
-                                    rel="noopener noreferrer"
-                                >
-                                    <p className="confirmation">{recieverAddress}</p>
-                                </a>
-                                <p className="confirmation">Recieved
-                                    <a
-                                        className="success-link"
-                                        target="_blank"
-                                        href={`https://testnets.opensea.io/assets/goerli/0x04bb356146fc2c760d88614b51da38429b9cb6c6/${giftID}`}
-                                        rel="noopener noreferrer"
-                                        style={{ marginLeft: ".3rem" }}
-                                    >
-                                        Gift #{giftID}
-                                    </a>
-                                </p>
-                                */}
                                 <a
                                     className="success-link"
                                     target="_blank"
