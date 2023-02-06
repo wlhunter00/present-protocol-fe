@@ -36,9 +36,6 @@ export function SelectNFT() {
   const [successData, setSuccessData] = useState();
   const color = "white";
 
-  // todo - on success render the x to close
-
-
   // Getting all the user's NFTs
   const fetcher = (url) => fetch(url).then((r) => r.json());
   const { data: nfts, error: nftsError } = useSWR(
@@ -144,7 +141,6 @@ export function SelectNFT() {
   async function wrapNFT() {
     console.log('Wrapping nft!', resolvedAddress, selectedNFT.collection_address, selectedNFT.token_id);
     setWrapModal(true);
-    // todo - confirm user logged in
 
     if (selectedNFT.schema === "ERC721") {
       const abi = ["function approve(address _spender, uint256 _value) public returns (bool success)"];

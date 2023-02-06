@@ -11,7 +11,6 @@ export default function Home() {
     <>
       <div>
         <Container style={{ textAlign: 'center' }}>
-          {/* TODO: title font messed up */}
           <h1 className="title">The Present Protocol</h1>
           <p className="body">
             Happy Holidays! Wrap your NFTs and send your wrapped present(s) to
@@ -19,7 +18,6 @@ export default function Home() {
             unwrap them to receive your gift!
           </p>
         </Container>
-
         {user && <MyPresents />}
         <SelectNFT />
       </div>
