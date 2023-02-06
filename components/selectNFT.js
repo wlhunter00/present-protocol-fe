@@ -12,8 +12,10 @@ import SelectNFTModal from './selectNFTModal';
 import { NFTCard } from './NFTCard';
 import WalletInput from './walletInput';
 import { Container } from '@mui/system'
-import GiftLogo from '../public/gift.svg';
+import Gift from "../public/new-gift.svg";
 import { Button, TextField } from '@mui/material';
+import useMediaQuery from "@mui/material/useMediaQuery";
+
 
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from 'dayjs';
@@ -21,10 +23,12 @@ import WrapNFTModal from './wrapNFTModal';
 
 // TODO: do I need to ask for apporval everytime?
 export function SelectNFT() {
+  const isDesktop = useMediaQuery("(min-width:600px)");
   const [selectModalOpen, setSelectModalOpen] = useState(false);
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [PresentProtocolContract, setPresentProtocolContract] = useState();
   const [walletAddressToSendTo, setWalletAddressToSendTo] = useState(null);
+  const [giftMessage, setGiftMessage] = useState("");
   const { user, walletConnector, setShowAuthFlow } = useDynamicContext();
   const [resolvedAddress, setResolvedAddress] = useState("");
   const [unwrapDate, setUnwrapDate] = useState();
@@ -140,6 +144,7 @@ export function SelectNFT() {
 
   async function wrapNFT() {
     console.log('Wrapping nft!', resolvedAddress, selectedNFT.collection_address, selectedNFT.token_id);
+    console.log("message:", giftMessage, "date:", unwrapDate.unix());
     setWrapModal(true);
 
     if (selectedNFT.schema === "ERC721") {
@@ -196,11 +201,13 @@ export function SelectNFT() {
     else {
       // 1155 approval
       // I actually don't know if we opensea api even sees 1155s
-
+      // todo - add 1555 support
+      console.log("1155");
     }
 
   }
 
+  // todo - add message
   return (
     <div className='gifting-bg'>
       <Container>
@@ -213,7 +220,7 @@ export function SelectNFT() {
               </div>
               :
               <div className="custom-card highlight-hover" onClick={openSelectModal}>
-                <GiftLogo />
+                <Gift width="150px" height="150px" />
                 <h4>Select an NFT</h4>
               </div>
             }
@@ -247,6 +254,19 @@ export function SelectNFT() {
                 walletSetter={setWalletAddressToSendTo}
                 resolvedAddress={resolvedAddress}
                 selectedNFT={selectedNFT}
+                isDesktop={isDesktop}
+              />
+              <TextField
+                onChange={(e) => {
+                  setGiftMessage(e.target.value);
+                }}
+                label="Gift Message (>250 Characters)"
+                variant="filled"
+                disabled={!selectedNFT}
+                style={{ width: isDesktop ? "50%" : "80%", margin: "0 auto", marginBottom: "1rem", backgroundColor: "white" }}
+                color='secondary'
+                multiline
+                inputProps={{ maxLength: 250 }}
               />
               {unwrapDate &&
                 <p className="confirmation" style={{ marginBottom: "1rem" }}>They will be able to open it on: <i>{unwrapDate.format('MM/DD/YYYY')}</i></p>

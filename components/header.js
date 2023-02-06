@@ -1,5 +1,6 @@
 import { DynamicWidget } from '@dynamic-labs/sdk-react';
-import GiftLogo from '../public/gift.svg';
+import Gift from "../public/new-gift.svg";
+
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 export function Header() {
@@ -18,7 +19,7 @@ export function Header() {
             style={styles}
         >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <GiftLogo />
+                <Gift width="75px" height="75px" />
                 <DynamicWidget buttonClassName="custom-connect-button" innerButtonComponent="Connect Wallet" />
             </div>
         </header>

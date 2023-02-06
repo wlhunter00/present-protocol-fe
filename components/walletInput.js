@@ -1,9 +1,7 @@
 import { TextField } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { useState } from "react";
 
 export default function WalletInput(props) {
-    const isDesktop = useMediaQuery("(min-width:600px)");
     const [inputVal, setInputVal] = useState("");
 
     function handleInput(input) {
@@ -17,12 +15,12 @@ export default function WalletInput(props) {
                 required
                 label="Recepient Address"
                 variant="filled"
-                style={{ width: isDesktop ? "50%" : "80%", margin: "0 auto", marginBottom: "1rem", backgroundColor: "white" }}
+                style={{ width: props.isDesktop ? "50%" : "80%", margin: "0 auto", marginBottom: "1rem", backgroundColor: "white" }}
                 onChange={(e) => {
                     handleInput(e.target.value);
                 }}
                 helperText={!props.resolvedAddress && inputVal && "Must be ENS or wallet address."}
-                error={!props.resolvedAddress && inputVal}
+                error={!props.resolvedAddress && (inputVal != "")}
                 disabled={!props.selectedNFT}
             />
             {props.selectedNFT &&
