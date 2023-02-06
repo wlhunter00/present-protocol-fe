@@ -21,10 +21,8 @@ export default function MyPresents() {
     const [unwrapStatus, setUnwrapStatus] = useState("default");
     const [errorMessage, setErrorMessage] = useState("");
     const [successData, setSuccessData] = useState();
-
-    // todo - render success data
-    // todo - filter the opened gifts
-
+    const [displayGifts, setDisplayGifts] = useState([]);
+    const [filterIDs, setFilterIDs] = useState([]);
 
     // Setting the contract
     useEffect(() => {
@@ -45,11 +43,27 @@ export default function MyPresents() {
         }
     }, [user, walletConnector]);
 
-    // todo - sort by id
     const { data: nfts, error: nftsError } = useSWR(
         user ? `/api/gifts?userWallet=${user.walletPublicKey}` : [],
         fetcher
     );
+
+    useEffect(() => {
+        if (Array.isArray(nfts)) {
+            filterGifts();
+        }
+    }, [nfts]);
+
+
+    function filterGifts() {
+        setDisplayGifts(nfts.filter((gift) => !filterIDs.includes(gift.token_id)).sort((a, b) => a.token_id - b.token_id));
+    }
+
+    useEffect(() => {
+        if (displayGifts.length > 0) {
+            filterGifts();
+        }
+    }, [filterIDs])
 
     function closeUnwrapNFTModal() {
         if (unwrapStatus === "success" || unwrapStatus === "error") {
@@ -73,6 +87,7 @@ export default function MyPresents() {
                 console.log("unwrapped successful");
                 setSuccessData(unwraptxt);
                 setUnwrapStatus("success");
+                setFilterIDs([...filterIDs, giftId]);
             }
             catch (error) {
                 setUnwrapStatus("error");
@@ -89,7 +104,7 @@ export default function MyPresents() {
 
     return (
         <Container>
-            {nfts &&
+            {Array.isArray(nfts) &&
                 <div style={{ textAlign: "center", marginBottom: "2rem" }}>
                     <h2 className="subtitle">Open your Presents</h2>
                     <Grid
@@ -97,7 +112,7 @@ export default function MyPresents() {
                         container
                         spacing={2}
                     >
-                        {Array.isArray(nfts) && nfts.map((nft, index) => (
+                        {displayGifts && displayGifts.map((nft, index) => (
                             <PresentCard nft={nft} key={index} unwrap={unwrap} />
                         ))
                         }

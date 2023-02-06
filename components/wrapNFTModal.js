@@ -17,7 +17,7 @@ export default function WrapNFTModal(props) {
 
     useEffect(() => {
         if (props.successData) {
-            console.log(props.successData.events[3]);
+            console.log(props.successData);
             console.log("sent to:", props.successData.events[3].args['_receiver']);
             setRecieverAddress(props.successData.events[3].args['_receiver']);
             console.log("gift number:", props.successData.events[3].args['_presentId'].toNumber());
