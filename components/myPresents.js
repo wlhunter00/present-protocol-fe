@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material"
+import { Container, Grid, Snackbar, Alert } from "@mui/material"
 import { useState, useEffect } from "react";
 import useSWR from 'swr';
 import { useDynamicContext } from '@dynamic-labs/sdk-react';
@@ -23,6 +23,7 @@ export default function MyPresents() {
     const [successData, setSuccessData] = useState();
     const [displayGifts, setDisplayGifts] = useState([]);
     const [filterIDs, setFilterIDs] = useState([]);
+    const [alertOpen, setAlertOpen] = useState(false);
 
     // Setting the contract
     useEffect(() => {
@@ -97,7 +98,7 @@ export default function MyPresents() {
             }
         }
         else {
-            // todo - handle this case
+            setAlertOpen(true);
             console.log("Can't unwrap");
         }
     }
@@ -126,6 +127,21 @@ export default function MyPresents() {
                 errorMessage={errorMessage}
                 successData={successData}
             />
+            <Snackbar
+                anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+                open={alertOpen}
+                autoHideDuration={4000}
+                onClose={() => setAlertOpen(false)}
+            >
+                <Alert
+                    variant="filled"
+                    onClose={() => setAlertOpen(false)}
+                    color="info"
+                    severity="error"
+                >
+                    Present isn't ready to be unwrapped!
+                </Alert>
+            </Snackbar>
         </Container>
     )
 };
