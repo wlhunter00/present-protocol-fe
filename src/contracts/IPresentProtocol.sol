@@ -3,7 +3,6 @@ pragma solidity 0.8.13;
 
 interface IPresentProtocol {
     error InvalidContract();
-    error InvalidMessage();
     error InvalidPayment();
     error NotAuthorized();
     error TimeNotElapsed();
@@ -41,8 +40,6 @@ interface IPresentProtocol {
     function setBaseURI(string calldata _baseURI) external payable;
 
     function setFee(uint256 _fee) external payable;
-
-    function strlen(string calldata _str) external pure returns (uint256 len);
 
     function unwrap(uint256 _presentId) external;
 

@@ -19,14 +19,13 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
     string  public baseURI;
     uint256 public currentId;
     uint256 public fee;
-    mapping(uint256 => bytes)  public  presents;
-    mapping(uint256 => string) private messages;
+    mapping(uint256 => bytes) public presents;
+    mapping(uint256 => string) internal messages;
 
     constructor() ERC721("Present Protocol", "GIFT") {}
 
     function wrap(bytes calldata _gift, address _to, string calldata _message) external payable {
         if (msg.value != fee) revert InvalidPayment();
-        if (strlen(_message) > 280) revert InvalidMessage();
 
         bytes memory from = abi.encode(msg.sender);
         bytes memory present = abi.encodePacked(from, _gift);
@@ -136,27 +135,6 @@ contract PresentProtocol is IPresentProtocol, ERC721, ERC721Holder, ERC1155Holde
                     )
                 )
             );
-    }
-
-    function strlen(string calldata _str) public pure returns (uint256 len) {
-        uint256 i;
-        uint256 bytesLength = bytes(_str).length;
-        for (len; i < bytesLength; ++len) {
-            bytes1 b = bytes(_str)[i];
-            if (b < 0x80) {
-                i += 1;
-            } else if (b < 0xE0) {
-                i += 2;
-            } else if (b < 0xF0) {
-                i += 3;
-            } else if (b < 0xF8) {
-                i += 4;
-            } else if (b < 0xFC) {
-                i += 5;
-            } else {
-                i += 6;
-            }
-        }
     }
 
     function _decode(bytes memory _present)
