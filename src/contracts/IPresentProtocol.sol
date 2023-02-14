@@ -7,6 +7,7 @@ interface IPresentProtocol {
     error InvalidPayment();
     error NotAuthorized();
     error TimeNotElapsed();
+    error TransferFailed();
 
     event Wrapped(
         address indexed _from,
