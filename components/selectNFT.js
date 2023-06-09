@@ -168,10 +168,15 @@ export function SelectNFT() {
 
         try {
           console.log("requesting wrapping");
+          console.log("encoding", selectedNFT.collection_address, selectedNFT.token_id, unwrapDate.unix());
+
+          const encodedGift = await PresentProtocolContract.encode(selectedNFT.collection_address, selectedNFT.token_id, unwrapDate.unix());
+          console.log("encoded gift", encodedGift);
+
           const wrap = await PresentProtocolContract.wrap(
-            selectedNFT.collection_address,
-            selectedNFT.token_id,
-            resolvedAddress
+            encodedGift,
+            resolvedAddress,
+            giftMessage
           );
 
           setWrapStatus("info");
@@ -256,6 +261,7 @@ export function SelectNFT() {
   }
 
   // todo - add message
+  // TODO - UPDATE IMAGERY BASED OFF FIVERR
   return (
     <div className='gifting-bg'>
       <Container>

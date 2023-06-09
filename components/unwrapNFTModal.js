@@ -128,6 +128,7 @@ export default function UnwrapNFTModal(props) {
 
                                 }
                                 color={props.unwrapStatus}
+                                // TODO - dynamic label (opening, opened)
                                 label="Opening Present"
                                 sx={{ fontSize: "x-large", padding: "1.5rem" }}
                             />

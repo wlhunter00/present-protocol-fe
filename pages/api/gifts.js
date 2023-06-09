@@ -32,6 +32,8 @@ export default async function handler(req, res) {
         description: currNFT['description'],
         image: currNFT['image_url'],
         schema: currNFT['asset_contract']['schema_name'],
+        unwrapDate: currNFT['traits'][0]['value'],
+        from: currNFT['traits'][1]['value'],
       });
       // }
     }

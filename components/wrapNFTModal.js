@@ -7,6 +7,7 @@ import Image from "next/image";
 import wrapGIF from '../public/box-shake.gif';
 import GiftLogo from '../public/gift.svg';
 import OpenSea from '../public/opensea.png';
+import { PRESENT_PROTOCOL_ADDY } from '../contractAddresses';
 
 export default function WrapNFTModal(props) {
     const isDesktop = useMediaQuery("(min-width:600px)");
@@ -82,7 +83,7 @@ export default function WrapNFTModal(props) {
                                     <a
                                         className="success-link"
                                         target="_blank"
-                                        href={`https://testnets.opensea.io/assets/goerli/0x04bb356146fc2c760d88614b51da38429b9cb6c6/${giftID}`}
+                                        href={`https://testnets.opensea.io/assets/goerli/${PRESENT_PROTOCOL_ADDY}/${giftID}`}
                                         rel="noopener noreferrer"
                                         style={{ marginLeft: ".3rem" }}
                                     >
@@ -92,7 +93,7 @@ export default function WrapNFTModal(props) {
                                 <a
                                     className="success-link"
                                     target="_blank"
-                                    href={`https://testnets.opensea.io/assets/goerli/0x04bb356146fc2c760d88614b51da38429b9cb6c6/${giftID}`}
+                                    href={`https://testnets.opensea.io/assets/goerli/${PRESENT_PROTOCOL_ADDY}/${giftID}`}
                                     rel="noopener noreferrer"
                                     style={{ marginLeft: ".3rem" }}
                                 >
