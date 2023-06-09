@@ -199,10 +199,58 @@ export function SelectNFT() {
       }
     }
     else {
-      // 1155 approval
-      // I actually don't know if we opensea api even sees 1155s
       // todo - add 1555 support
       console.log("1155");
+      const abi = ["function setApprovalForAll(address _operator, bool _approved) public returns (bool success)"];
+      const provider = walletConnector.getWeb3Provider();
+      const signer = provider.getSigner();
+
+      const specificNFTContract = new ethers.Contract(selectedNFT.collection_address, abi, provider);
+
+      try {
+        console.log("requesting approval for", selectedNFT.collection_address);
+        const approval = await specificNFTContract.connect(signer).setApprovalForAll(
+          PRESENT_PROTOCOL_ADDY,
+          true
+        );
+        setApprovalStatus("info");
+
+        await approval.wait();
+        setApprovalStatus("success");
+        console.log("approval granted")
+
+        try {
+          console.log("requesting wrapping");
+          const wrap = await PresentProtocolContract.wrap(
+            selectedNFT.collection_address,
+            selectedNFT.token_id,
+            resolvedAddress
+          );
+
+          setWrapStatus("info");
+          console.log("wrapping request sent")
+          const wraptxt = await wrap.wait();
+          console.log(wraptxt);
+          console.log("wrap done");
+          setSuccessData(wraptxt);
+          setWrapStatus("success");
+
+          setResolvedAddress("");
+          setUnwrapDate(dayjs());
+          setSelectedNFT(null);
+        }
+        catch (error) {
+          setWrapStatus("error");
+          setErrorMessage(error.message);
+          console.log("wrap error", error);
+        }
+      }
+      catch (error) {
+        setApprovalStatus("error");
+        setErrorMessage(error.message);
+        console.log("approval error", error);
+      }
+
     }
 
   }
