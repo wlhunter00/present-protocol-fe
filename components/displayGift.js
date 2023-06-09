@@ -10,13 +10,8 @@ export default function DisplayGift(props) {
     );
 
     return (
-        <a
-            target="_blank"
-            href={`https://testnets.opensea.io/assets/goerli/${props.NFTAddress}/${props.NFTID}`}
-            rel="noopener noreferrer"
-            style={{ textDecoration: "none" }}
-        >
-            {nft && <NFTCard unwrapped nft={nft} />}
-        </a>
+        <>
+            {nft && <NFTCard unwrapped nft={nft} NFTAddress={props.NFTAddress} NFTID={props.NFTID} />}
+        </>
     )
 }

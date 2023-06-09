@@ -85,7 +85,7 @@ export default function UnwrapNFTModal(props) {
                                     href={`https://goerli.etherscan.io/tx/${transactionID}`}
                                     rel="noopener noreferrer"
                                 >
-                                    <p style={{ marginTop: "1rem", marginBottom: "1rem" }} className="confirmation">Transaction Confirmation</p>
+                                    <p style={{ marginTop: "1rem", marginBottom: "1rem", textDecoration: "underline" }} className="confirmation">Transaction Confirmation</p>
                                 </a>
                                 <a
                                     className="success-link"
