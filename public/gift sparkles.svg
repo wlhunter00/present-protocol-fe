@@ -1,0 +1,79 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 675 637.5">
+ 
+     <style>
+ 
+#gif{animation: i28c 2s  ease-in-out infinite;
+transform-origin:center;
+transform-box:fill-box;}
+@keyframes i28c {
+  0%{transform:scale(.5,.54);}
+ 
+  100%{transform:scale(.5,.54);}
+  }
+ 
+ #gif2{animation: i19a 2s  ease-in-out infinite;
+transform-origin:center;
+transform-box:fill-box;}
+@keyframes i19a {
+  0%{transform:rotateZ(0deg)}
+  
+   
+  100%{transform:rotateZ(0deg)}
+   
+}
+#aa{animation: i16b 1s  linear infinite;
+transform-origin:50% 50%;
+transform-box:fill-box;}
+@keyframes i16b {
+  0%{opacity:0}
+  30%{opacity:0}
+  50%{opacity:1}
+  100%{opacity:0}
+  }
+  #bb{animation: b 1s .3s  linear infinite;
+transform-origin:50% 50%;
+transform-box:fill-box;}
+@keyframes b {
+  0%{opacity:0}
+  30%{opacity:0}
+
+  50%{opacity:1}
+  100%{opacity:0}
+  }
+    #cc{animation: c 1s .5s  linear infinite;
+transform-origin:50% 50%;
+transform-box:fill-box;}
+@keyframes c {
+  0%{opacity:0}
+  30%{opacity:0}
+  50%{opacity:1}
+  100%{opacity:0}
+  }
+ </style>
+ 
+  <g id="gif2">
+    <g id="gif">
+      <path d="M62.5,225h550V581.75A43.25,43.25,0,0,1,569.25,625H105.75A43.25,43.25,0,0,1,62.5,581.75Z" style="fill: #ff85a7;stroke: #54596e;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+      <rect x="287.5" y="225" width="100" height="400" style="fill: #a125f2;stroke: #54596e;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+      <path d="M93.62,112.5h487.5a81.12,81.12,0,0,1,81.38,80.86h0V225H12.5V193.62A81.12,81.12,0,0,1,93.62,112.5Z" style="fill: #00f9bd;stroke: #54596e;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+      <rect x="262.5" y="112.5" width="150" height="112.5" style="fill: #a125f2;stroke: #54596e;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+      <path d="M337.5,12.5h0A37.5,37.5,0,0,1,375,50v62.5H300V50A37.5,37.5,0,0,1,337.5,12.5Z" style="fill: #a125f2;stroke: #54596e;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+      <path d="M375,62.5h87.5a50,50,0,0,1,50,50H375Z" style="fill: #a125f2;stroke: #54596e;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+      <polygon points="475.25 62.5 425.25 12.5 375.25 62.5 475.25 62.5" style="fill: #a125f2;stroke: #54596e;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+      <path d="M300,112.5H162.5a50,50,0,0,1,50-50H300Z" style="fill: #a125f2;stroke: #54596e;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+      <polygon points="199.75 62.5 249.75 12.5 299.75 62.5 199.75 62.5" style="fill: #a125f2;stroke: #54596e;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+    </g>
+  </g>
+  <g id="cc">
+    <line x1="106.5" y1="103" x2="139.5" y2="136" style="fill: none;stroke: #f1ff6b;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+    <line x1="139.5" y1="103" x2="106.5" y2="136" style="fill: none;stroke: #f1ff6b;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+  </g>
+  <g id="bb">
+    <line x1="535.5" y1="147" x2="568.5" y2="180" style="fill: none;stroke: #f1ff6b;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+    <line x1="568.5" y1="147" x2="535.5" y2="180" style="fill: none;stroke: #f1ff6b;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+  </g>
+  <g id="aa">
+    <line x1="326.5" y1="37" x2="359.5" y2="70" style="fill: none;stroke: #f1ff6b;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+    <line x1="359.5" y1="37" x2="326.5" y2="70" style="fill: none;stroke: #f1ff6b;stroke-linecap: round;stroke-linejoin: round;stroke-width: 25px"/>
+  </g>
+</svg>
