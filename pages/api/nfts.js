@@ -1,4 +1,7 @@
 import axios from 'axios';
+import {
+  GIFT_CONTRACT_ADDRESS
+} from "../../constants";
 
 // (GET) all NFTs for a user
 export default async function handler(req, res) {
@@ -18,7 +21,7 @@ export default async function handler(req, res) {
     for (let i = 0; i < apiResponse.data['assets'].length; i++) {
       const currNFT = apiResponse.data['assets'][i];
 
-      if (currNFT['name'] && currNFT['description'] && currNFT['image_url']) {
+      if (currNFT['name'] && currNFT['description'] && currNFT['image_url'] && currNFT['asset_contract']['address'].toLowerCase() != GIFT_CONTRACT_ADDRESS.toLowerCase()) {
         nfts.push({
           token_id: Number(currNFT['token_id']),
           collection_address: currNFT['asset_contract']['address'],

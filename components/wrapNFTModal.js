@@ -34,6 +34,7 @@ export default function WrapNFTModal(props) {
         }
     }, [props.wrapStatus])
 
+    // TODO - update success gifting to make it more dynamic
     return (
         <Dialog
             open={props.wrapModal}

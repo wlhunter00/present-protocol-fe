@@ -21,6 +21,8 @@ export function PresentCard(props) {
         }
     }, []);
 
+    // TODO - include message?
+
     return (
         <Grid item xs={3}>
             <div className="gift-card highlight-hover">

@@ -167,12 +167,12 @@ export function SelectNFT() {
         console.log("approval granted")
 
         try {
-          console.log("requesting wrapping");
           console.log("encoding", selectedNFT.collection_address, selectedNFT.token_id, unwrapDate.unix());
 
           const encodedGift = await PresentProtocolContract.encode(selectedNFT.collection_address, selectedNFT.token_id, unwrapDate.unix());
           console.log("encoded gift", encodedGift);
 
+          console.log("requesting wrapping");
           const wrap = await PresentProtocolContract.wrap(
             encodedGift,
             resolvedAddress,
@@ -225,11 +225,15 @@ export function SelectNFT() {
         console.log("approval granted")
 
         try {
+          console.log("encoding", selectedNFT.collection_address, selectedNFT.token_id, unwrapDate.unix());
+          const encodedGift = await PresentProtocolContract.encode(selectedNFT.collection_address, selectedNFT.token_id, unwrapDate.unix());
+          console.log("encoded gift", encodedGift);
+
           console.log("requesting wrapping");
           const wrap = await PresentProtocolContract.wrap(
-            selectedNFT.collection_address,
-            selectedNFT.token_id,
-            resolvedAddress
+            encodedGift,
+            resolvedAddress,
+            giftMessage
           );
 
           setWrapStatus("info");
