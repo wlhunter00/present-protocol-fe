@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.13;
+pragma solidity 0.8.17;
 
 interface IPresentProtocol {
     error InvalidContract();
@@ -25,7 +25,7 @@ interface IPresentProtocol {
 
     function baseURI() external view returns (string memory);
 
-    function currentId() external view returns (uint256);
+    function currentId() external view returns (uint128);
 
     function encode(
         address _nftContract,
@@ -33,17 +33,21 @@ interface IPresentProtocol {
         uint256 _timelock
     ) external pure returns (bytes memory gift);
 
-    function fee() external view returns (uint256);
+    function fee() external view returns (uint128);
 
     function presents(uint256) external view returns (bytes memory);
 
     function setBaseURI(string calldata _baseURI) external payable;
 
-    function setFee(uint256 _fee) external payable;
+    function setFee(uint128 _fee) external payable;
 
     function unwrap(uint256 _presentId) external;
 
     function withdraw(address payable _to) external payable;
 
-    function wrap(bytes calldata _gift, address _to, string calldata _message) external payable;
+    function wrap(
+        bytes calldata _gift,
+        address _to,
+        string calldata _message
+    ) external payable;
 }
